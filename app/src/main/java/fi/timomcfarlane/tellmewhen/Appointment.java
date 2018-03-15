@@ -8,22 +8,32 @@ public class Appointment {
     private Date date;
     private String notes;
     private String time;
-
+    private String category;
 
     public Appointment(String title){this.title = title;}
 
-    public Appointment(String title, Date date, String time) {
+    public Appointment(String title, Date date, String time, String category) {
         this.title = title;
         this.date = date;
         this.time = time;
+        this.category = category;
     }
 
-    public Appointment(String title, String address, Date date, String notes, String time) {
+    public Appointment(String title, String address, Date date, String time, String category) {
         this.title = title;
         this.address = address;
         this.date = date;
-        this.notes = notes;
         this.time = time;
+        this.category = category;
+    }
+
+    public Appointment(String title, String address, Date date, String time, String notes, String category) {
+        this.title = title;
+        this.address = address;
+        this.date = date;
+        this.time = time;
+        this.notes = notes;
+        this.category = category;
     }
 
     public String getTitle() {
@@ -64,6 +74,15 @@ public class Appointment {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override

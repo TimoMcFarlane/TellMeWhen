@@ -3,4 +3,13 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="background">#2E2E2E</color>
+    <color name="card_background">#545454</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#BDBDBD</color>
+    <color name="social">#448AC9</color>
+    <color name="work">#C94444</color>
+    <color name="personal">#C97444</color>
+    <color name="family">#8F44C9</color>
 </resources>

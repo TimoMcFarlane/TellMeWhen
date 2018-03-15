@@ -13,10 +13,10 @@ public class AppointmentHandler {
     public AppointmentHandler(Context host) {
         this.host = host;
         apps = new ArrayList<>();
-        apps.add(new Appointment("Test", Calendar.getInstance().getTime(), "12:00"));
-        apps.add(new Appointment("Test2", Calendar.getInstance().getTime(), "12:00"));
-        apps.add(new Appointment("Test3", Calendar.getInstance().getTime(), "12:00"));
-        apps.add(new Appointment("Test4", Calendar.getInstance().getTime(), "12:00"));
+        apps.add(new Appointment("Drink coffee","Potato street 1", Calendar.getInstance().getTime(), "12:00", "work"));
+        apps.add(new Appointment("Eat chicken wings","Potato street 1", Calendar.getInstance().getTime(), "12:00", "personal"));
+        apps.add(new Appointment("Discuss blogposts","Potato street 1", Calendar.getInstance().getTime(), "12:00","social"));
+        apps.add(new Appointment("Meet with family","Potato street 1",Calendar.getInstance().getTime(), "12:00", "family"));
     }
 
     public ArrayList<Appointment> getAppointments() {

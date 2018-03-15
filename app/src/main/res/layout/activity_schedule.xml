@@ -14,12 +14,14 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/background">
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            android:padding="20dp"/>
+            android:background="@color/background" />
     </RelativeLayout>
 
 </LinearLayout>
