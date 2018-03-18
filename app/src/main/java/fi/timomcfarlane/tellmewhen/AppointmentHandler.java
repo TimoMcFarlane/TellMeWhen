@@ -1,26 +1,79 @@
 package fi.timomcfarlane.tellmewhen;
 
+import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.v4.content.LocalBroadcastManager;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class AppointmentHandler {
 
+    private AppDatabase db;
     private ArrayList<Appointment> apps;
-
     private Context host;
+    private LocalBroadcastManager lBroadcast;
+    private Appointment[] currentAppointments;
 
     public AppointmentHandler(Context host) {
         this.host = host;
+        db = Room.databaseBuilder(host, AppDatabase.class, "database-appointments").build();
         apps = new ArrayList<>();
-        apps.add(new Appointment("Drink coffee","Potato street 1", Calendar.getInstance().getTime(), "12:00", "work"));
-        apps.add(new Appointment("Eat chicken wings","Potato street 1", Calendar.getInstance().getTime(), "12:00", "personal"));
-        apps.add(new Appointment("Discuss blogposts","Potato street 1", Calendar.getInstance().getTime(), "12:00","social"));
-        apps.add(new Appointment("Meet with family","Potato street 1",Calendar.getInstance().getTime(), "12:00", "family"));
-        apps.add(new Appointment("Attend wedding","Potato street 1",Calendar.getInstance().getTime(), "12:00", "family"));
+        lBroadcast = LocalBroadcastManager.getInstance(host);
     }
 
     public ArrayList<Appointment> getAppointments() {
-        return this.apps;
+        return apps;
+    }
+
+    public void insertNewData(Appointment... app) {
+        currentAppointments = app;
+        //apps.addAll(Arrays.asList(app));
+        new AsyncTaskHandler().execute("insert");
+        getNewData();
+    }
+
+    public void getNewData() {
+        new AsyncTaskHandler().execute("get");
+    }
+
+    private class AsyncTaskHandler extends AsyncTask<String, Integer, Integer> {
+
+        @Override
+        protected Integer doInBackground(String... actions) {
+            int actionCode = 0;
+            for(int i = 0; i < actions.length; i++) {
+                switch(actions[i]) {
+                    case "get":
+                        apps.clear();
+                        apps.addAll(db.appointmentDao().getAll());
+                        actionCode = 200;
+                        break;
+                    case "insert":
+                        db.appointmentDao().insertAppointments(currentAppointments);
+                        actionCode = 201;
+                        break;
+                    case "delete":
+                        db.appointmentDao().deleteAppointments(currentAppointments);
+                        actionCode = 204;
+                        break;
+                    case "update":
+                        db.appointmentDao().updateAppointments(currentAppointments);
+                        actionCode = 205;
+                        break;
+                }
+            }
+            return actionCode;
+        }
+
+        @Override
+        protected void onPostExecute(Integer code) {
+            Intent i = new Intent("appointment_handler");
+            i.putExtra("action", code);
+            lBroadcast.sendBroadcast(i);
+        }
     }
 }
