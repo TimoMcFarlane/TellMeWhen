@@ -1,7 +1,5 @@
 package fi.timomcfarlane.tellmewhen;
 
-import android.graphics.Color;
-import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -55,7 +53,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         holder.card_title.setText(temp[position].getTitle());
         holder.card_address.setText(temp[position].getAddress());
         addCategoryTint(holder, temp[position]);
-
     }
 
     private void addCategoryTint(ViewHolder holder, Appointment appointment) {

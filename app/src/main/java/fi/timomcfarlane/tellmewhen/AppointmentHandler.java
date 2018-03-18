@@ -17,6 +17,7 @@ public class AppointmentHandler {
         apps.add(new Appointment("Eat chicken wings","Potato street 1", Calendar.getInstance().getTime(), "12:00", "personal"));
         apps.add(new Appointment("Discuss blogposts","Potato street 1", Calendar.getInstance().getTime(), "12:00","social"));
         apps.add(new Appointment("Meet with family","Potato street 1",Calendar.getInstance().getTime(), "12:00", "family"));
+        apps.add(new Appointment("Attend wedding","Potato street 1",Calendar.getInstance().getTime(), "12:00", "family"));
     }
 
     public ArrayList<Appointment> getAppointments() {
