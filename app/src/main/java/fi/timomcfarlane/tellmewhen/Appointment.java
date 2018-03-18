@@ -1,39 +1,35 @@
 package fi.timomcfarlane.tellmewhen;
 
-import java.util.Date;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity(tableName = "appointment")
 public class Appointment {
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "address")
     private String address;
-    private Date date;
-    private String notes;
+    @ColumnInfo(name = "date")
+    private String date;
+    @ColumnInfo(name = "time")
     private String time;
+    @ColumnInfo(name = "category")
     private String category;
+    @ColumnInfo(name = "notes")
+    private String notes;
+    @ColumnInfo(name = "alarms")
+    private String alarms;
 
-    public Appointment(String title){this.title = title;}
 
-    public Appointment(String title, Date date, String time, String category) {
-        this.title = title;
-        this.date = date;
-        this.time = time;
-        this.category = category;
+    public int getId() {
+        return id;
     }
 
-    public Appointment(String title, String address, Date date, String time, String category) {
-        this.title = title;
-        this.address = address;
-        this.date = date;
-        this.time = time;
-        this.category = category;
-    }
-
-    public Appointment(String title, String address, Date date, String time, String notes, String category) {
-        this.title = title;
-        this.address = address;
-        this.date = date;
-        this.time = time;
-        this.notes = notes;
-        this.category = category;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -52,11 +48,11 @@ public class Appointment {
         this.address = address;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -85,9 +81,51 @@ public class Appointment {
         this.category = category;
     }
 
+    public String getAlarms() {
+        return alarms;
+    }
+
+    public void setAlarms(String alarms) {
+        this.alarms += "," + alarms;
+    }
+
     @Override
     public String toString() {
-        return this.title;
+        return "Appointment{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", address='" + address + '\'' +
+                ", date='" + date + '\'' +
+                ", time='" + time + '\'' +
+                ", category='" + category + '\'' +
+                ", notes='" + notes + '\'' +
+                '}';
+    }
+
+    public Appointment(){}
+
+    public Appointment(String title, String date, String time, String category) {
+        this.title = title;
+        this.date = date;
+        this.time = time;
+        this.category = category;
+    }
+
+    public Appointment(String title, String address, String date, String time, String category) {
+        this.title = title;
+        this.address = address;
+        this.date = date;
+        this.time = time;
+        this.category = category;
+    }
+
+    public Appointment(String title, String address, String date, String time, String notes, String category) {
+        this.title = title;
+        this.address = address;
+        this.date = date;
+        this.time = time;
+        this.notes = notes;
+        this.category = category;
     }
 }
 
