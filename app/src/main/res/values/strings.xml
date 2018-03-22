@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TellMeWhen</string>
+    <string-array name="form_category_options">
+        <item>Work</item>
+        <item>Personal</item>
+        <item>Family</item>
+        <item>Social</item>
+    </string-array>
 </resources>

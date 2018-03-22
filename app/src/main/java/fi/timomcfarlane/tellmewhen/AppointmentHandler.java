@@ -23,6 +23,7 @@ public class AppointmentHandler {
         db = Room.databaseBuilder(host, AppDatabase.class, "database-appointments").build();
         apps = new ArrayList<>();
         lBroadcast = LocalBroadcastManager.getInstance(host);
+        getNewData();
     }
 
     public ArrayList<Appointment> getAppointments() {

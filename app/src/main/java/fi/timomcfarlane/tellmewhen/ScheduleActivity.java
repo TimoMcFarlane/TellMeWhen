@@ -9,10 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 
 public class ScheduleActivity extends AppCompatActivity {
+    private final static int REQUEST_NEW_APPOINTMENT = 10;
     private RecyclerView recycledList;
     private AppointmentHandler appHandler;
     private BroadcastReceiver bReceiver;
@@ -32,6 +34,12 @@ public class ScheduleActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setupBroadcastReceiver();
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
     @Override
@@ -41,9 +49,27 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
 
-    public void clicked(View v) {
-        appHandler.insertNewData(new Appointment("Drink cola", "Näyttelijänkatu 21B19","2018-03-18", "23:59", "work"));
-        //appHandler.getNewData();
+    public void addNewAppointment(View v) {
+        Intent i = new Intent(this, FormActivity.class);
+        startActivityForResult(i, REQUEST_NEW_APPOINTMENT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_NEW_APPOINTMENT) {
+            if(resultCode == RESULT_OK) {
+                appHandler.insertNewData(new Appointment(
+                        data.getStringExtra("title"),
+                        data.getStringExtra("address"),
+                        data.getStringExtra("date"),
+                        data.getStringExtra("time"),
+                        data.getStringExtra("notes"),
+                        data.getStringExtra("category")
+                ));
+            } else if(resultCode == RESULT_CANCELED) {
+                Log.d("MSG", "CANCELED");
+            }
+        }
     }
 
     public void setupBroadcastReceiver() {
