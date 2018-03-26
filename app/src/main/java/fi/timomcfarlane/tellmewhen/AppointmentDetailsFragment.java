@@ -24,6 +24,7 @@ public class AppointmentDetailsFragment extends Fragment {
     private ImageView categoryImg;
     private RelativeLayout categoryContainer;
     private RelativeLayout close;
+    private ImageView delete;
 
     @Nullable
     @Override
@@ -39,6 +40,11 @@ public class AppointmentDetailsFragment extends Fragment {
         close.setOnClickListener((View v) -> {
             ((ScheduleActivity)getActivity()).showListFragment();
         });
+        delete.setOnClickListener((View v) -> {
+            ((ScheduleActivity)getActivity())
+                    .deleteAppointment(getArguments().getInt("position"));
+        });
+
         return view;
     }
 
@@ -51,6 +57,7 @@ public class AppointmentDetailsFragment extends Fragment {
         categoryImg = (ImageView) view.findViewById(R.id.details_category_img);
         categoryContainer = (RelativeLayout) view.findViewById(R.id.detail_category_wrapper);
         close = (RelativeLayout) view.findViewById(R.id.details_close);
+        delete = (ImageView) view.findViewById(R.id.details_delete_btn);
     }
 
     public void initCategoryImage(String category) {

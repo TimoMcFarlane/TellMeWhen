@@ -34,6 +34,12 @@ public class AppointmentHandler {
         getNewData();
     }
 
+    public void removeData(Appointment... app) {
+        currentAppointments = app;
+        new AsyncTaskHandler().execute("delete");
+        getNewData();
+    }
+
     public void getNewData() {
         new AsyncTaskHandler().execute("get");
     }

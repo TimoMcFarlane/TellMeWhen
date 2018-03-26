@@ -10,6 +10,10 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 
 public class ScheduleActivity extends AppCompatActivity {
@@ -19,11 +23,15 @@ public class ScheduleActivity extends AppCompatActivity {
     private AppointmentDetailsFragment details;
     private AppointmentHandler appHandler;
     private RecyclerView recycledList;
+    private TextView bannerMonth;
+    private TextView bannerWeek;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
+        initBanner();
         listFragment = new AppointmentListFragment();
         details = new AppointmentDetailsFragment();
         getSupportFragmentManager()
@@ -53,10 +61,24 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    public void initBanner() {
+        bannerMonth = (TextView) findViewById(R.id.banner_month);
+        bannerWeek = (TextView) findViewById(R.id.banner_week);
+        calendar = Calendar.getInstance();
+        bannerMonth.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
+        bannerWeek.setText("WEEK " + calendar.get(Calendar.WEEK_OF_YEAR));
+    }
+
+
 
     public void addNewAppointment(View v) {
         Intent i = new Intent(this, FormActivity.class);
         startActivityForResult(i, ADD_NEW_APPOINTMENT);
+    }
+
+    public void deleteAppointment(int position) {
+        appHandler.removeData(appHandler.getAppointments().remove(position));
+        showListFragment();
     }
 
     @Override
@@ -103,6 +125,7 @@ public class ScheduleActivity extends AppCompatActivity {
         payload.putString("time", clickedApp.getTime());
         payload.putString("category", clickedApp.getCategory());
         payload.putString("notes", clickedApp.getNotes());
+        payload.putInt("position", position);
         return payload;
     }
 
