@@ -1,5 +1,6 @@
 package fi.timomcfarlane.tellmewhen;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +12,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 
+import static fi.timomcfarlane.tellmewhen.DateManipulationUtils.createVerbalDate;
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
 
     private ArrayList<Appointment> apps;
+
+    private Context host;
+    private CustomCardClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public CardView card;
         public TextView card_title;
         public TextView card_address;
+        public TextView card_time;
+        public TextView card_date;
         public RelativeLayout card_category_image;
         public ImageView category_image;
 
@@ -29,11 +37,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             card_address = (TextView)itemView.findViewById(R.id.card_text_view_address);
             card_category_image = (RelativeLayout) itemView.findViewById(R.id.card_category_img);
             category_image = (ImageView)itemView.findViewById(R.id.category_img);
+            card_time = (TextView)itemView.findViewById(R.id.card_text_view_time);
+            card_date = (TextView)itemView.findViewById(R.id.card_text_view_date);
         }
     }
 
-    public RecyclerAdapter(ArrayList<Appointment> set) {
+    public RecyclerAdapter(Context context, ArrayList<Appointment> set, CustomCardClickListener listener) {
         this.apps = set;
+        this.host = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,6 +55,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
                 .from(parent.getContext())
                 .inflate(R.layout.list_card_item, parent,false);
         ViewHolder vh = new ViewHolder(v);
+        v.setOnClickListener(view -> listener.onItemClick(view, vh.getAdapterPosition()));
         return vh;
     }
 
@@ -52,6 +65,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         temp = apps.toArray(temp);
         holder.card_title.setText(temp[position].getTitle());
         holder.card_address.setText(temp[position].getAddress());
+        holder.card_time.setText(temp[position].getTime());
+        holder.card_date.setText(createVerbalDate(temp[position].getDate()));
         addCategoryTint(holder, temp[position]);
     }
 
