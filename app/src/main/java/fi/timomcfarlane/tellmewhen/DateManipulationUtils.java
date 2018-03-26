@@ -14,7 +14,7 @@ public class DateManipulationUtils {
     public static String createVerbalDate(String strDate) {
         String str = "";
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date parse = sdf.parse(strDate);
             Calendar c = Calendar.getInstance();
             c.setTime(parse);
@@ -30,7 +30,7 @@ public class DateManipulationUtils {
     }
 
     public static Date createDateFromString(String strDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date parse = null;
         try {
             parse = sdf.parse(strDate);
@@ -41,7 +41,7 @@ public class DateManipulationUtils {
     }
 
     public static String createStringFromDate(Date date) {
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         return df.format(date);
     }
 

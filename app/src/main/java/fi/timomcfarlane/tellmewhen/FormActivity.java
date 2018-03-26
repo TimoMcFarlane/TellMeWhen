@@ -52,9 +52,9 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void initDateTimePlaceholders() {
         String dateText = formatWithSeparator(new int[] {
-                c.get(Calendar.DAY_OF_MONTH),
+                c.get(Calendar.YEAR),
                 c.get(Calendar.MONTH),
-                c.get(Calendar.YEAR)
+                c.get(Calendar.DAY_OF_MONTH)
         }, '-');
 
         String timeText = formatWithSeparator(new int[] {

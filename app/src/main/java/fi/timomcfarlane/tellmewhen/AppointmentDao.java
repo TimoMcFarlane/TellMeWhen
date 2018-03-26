@@ -11,7 +11,7 @@ import java.util.List;
 
 @Dao
 public interface AppointmentDao {
-    @Query("SELECT * FROM appointment")
+    @Query("SELECT * FROM appointment ORDER BY date(date) ASC, time(time) ASC")
     List<Appointment> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

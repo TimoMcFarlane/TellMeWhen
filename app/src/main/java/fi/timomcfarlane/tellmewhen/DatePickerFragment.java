@@ -30,7 +30,7 @@ public class DatePickerFragment extends AppCompatDialogFragment
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         Intent broadcast = new Intent("form_activity");
-        broadcast.putExtra("date", new int[] {i2,i1,i} );
+        broadcast.putExtra("date", new int[] {i,i1,i2} );
         lBroadcast.sendBroadcast(broadcast);
     }
 }
