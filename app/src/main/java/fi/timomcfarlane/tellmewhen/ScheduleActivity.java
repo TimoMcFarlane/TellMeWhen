@@ -7,32 +7,37 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
 
 public class ScheduleActivity extends AppCompatActivity {
-    private final static int REQUEST_NEW_APPOINTMENT = 10;
-    private RecyclerView recycledList;
-    private AppointmentHandler appHandler;
+    private final static int ADD_NEW_APPOINTMENT = 10;
     private BroadcastReceiver bReceiver;
-
+    private AppointmentListFragment listFragment;
+    private AppointmentDetailsFragment details;
+    private AppointmentHandler appHandler;
+    private RecyclerView recycledList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
-        appHandler = new AppointmentHandler(this);
-        recycledList = (RecyclerView) findViewById(R.id.recycle_list);
-        recycledList.setLayoutManager(new LinearLayoutManager(this));
-        recycledList.setAdapter(new RecyclerAdapter(appHandler.getAppointments()));
+        listFragment = new AppointmentListFragment();
+        details = new AppointmentDetailsFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, listFragment, "list")
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        appHandler = listFragment.getAppHandler();
+        recycledList = listFragment.getList();
         setupBroadcastReceiver();
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -51,12 +56,12 @@ public class ScheduleActivity extends AppCompatActivity {
 
     public void addNewAppointment(View v) {
         Intent i = new Intent(this, FormActivity.class);
-        startActivityForResult(i, REQUEST_NEW_APPOINTMENT);
+        startActivityForResult(i, ADD_NEW_APPOINTMENT);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_NEW_APPOINTMENT) {
+        if(requestCode == ADD_NEW_APPOINTMENT) {
             if(resultCode == RESULT_OK) {
                 appHandler.insertNewData(new Appointment(
                         data.getStringExtra("title"),
@@ -72,26 +77,41 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    public void showListFragment() {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container,listFragment)
+                .commit();
+    }
+
+    public void viewDetailsFragment(int position) {
+        details.setArguments(createBundleFromAppointment(position));
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, details)
+                .commit();
+    }
+
+
+
+    public Bundle createBundleFromAppointment(int position) {
+        Appointment clickedApp = appHandler.getAppointments().get(position);
+        Bundle payload = new Bundle();
+        payload.putString("title", clickedApp.getTitle());
+        payload.putString("address", clickedApp.getAddress());
+        payload.putString("date", clickedApp.getDate());
+        payload.putString("time", clickedApp.getTime());
+        payload.putString("category", clickedApp.getCategory());
+        payload.putString("notes", clickedApp.getNotes());
+        return payload;
+    }
+
     public void setupBroadcastReceiver() {
         bReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int code = intent.getIntExtra("action", 400);
-                switch(code) {
-                    case 200:
-                        recycledList.getAdapter().notifyDataSetChanged();
-                        break;
-                    case 209:
-                        recycledList.getAdapter().notifyDataSetChanged();
-                        break;
-                    case 204:
-                        break;
-                    case 205:
-                        break;
-                    case 400:
-                        break;
-                }
-
+                recycledList.getAdapter().notifyDataSetChanged();
             }
         };
         LocalBroadcastManager
