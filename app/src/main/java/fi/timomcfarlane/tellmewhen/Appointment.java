@@ -13,7 +13,7 @@ public class Appointment {
     @ColumnInfo(name = "address")
     private String address;
     @ColumnInfo(name = "date")
-    private String date;
+    public String date;
     @ColumnInfo(name = "time")
     private String time;
     @ColumnInfo(name = "category")

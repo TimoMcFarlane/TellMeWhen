@@ -7,8 +7,6 @@ import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 
 public class AppointmentHandler {
 
@@ -32,7 +30,6 @@ public class AppointmentHandler {
 
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
-        //apps.addAll(Arrays.asList(app));
         new AsyncTaskHandler().execute("insert");
         getNewData();
     }
