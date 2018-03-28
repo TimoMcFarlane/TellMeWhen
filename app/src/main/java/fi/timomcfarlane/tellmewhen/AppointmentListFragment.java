@@ -32,7 +32,6 @@ public class AppointmentListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         appHandler = new AppointmentHandler(getActivity());
         adapter = new RecyclerAdapter(getContext(), appHandler.getAppointments(), new CustomCardClickListener() {
-
             @Override
             public void onItemClick(View v, int position) {
                 ((ScheduleActivity)getActivity()).viewDetailsFragment(position);

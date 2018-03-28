@@ -18,6 +18,7 @@ import java.util.Locale;
 
 public class ScheduleActivity extends AppCompatActivity {
     private final static int ADD_NEW_APPOINTMENT = 10;
+    private final static int EDIT_EXISTING_APPOINTMENT = 12;
     private BroadcastReceiver bReceiver;
     private AppointmentListFragment listFragment;
     private AppointmentDetailsFragment details;
@@ -81,6 +82,15 @@ public class ScheduleActivity extends AppCompatActivity {
         showListFragment();
     }
 
+    public void editAppointmentAtPosition(int position) {
+        Intent i = new Intent(this, FormActivity.class);
+        Bundle b = createBundleFromAppointment(position);
+        i.putExtras(b);
+        i.putExtra("edit", true);
+        i.putExtra("position", position);
+        startActivityForResult(i, EDIT_EXISTING_APPOINTMENT);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ADD_NEW_APPOINTMENT) {
@@ -95,6 +105,23 @@ public class ScheduleActivity extends AppCompatActivity {
                 ));
             } else if(resultCode == RESULT_CANCELED) {
                 Log.d("MSG", "CANCELED");
+            }
+        } else if(requestCode == EDIT_EXISTING_APPOINTMENT) {
+            if(resultCode == RESULT_OK) {
+                Appointment edited =
+                        appHandler.getAppointments()
+                        .get(data.getExtras().getInt("position"));
+
+                edited.setTitle(data.getStringExtra("title"));
+                edited.setAddress(data.getStringExtra("address"));
+                edited.setDate(data.getStringExtra("date"));
+                edited.setTime(data.getStringExtra("time"));
+                edited.setNotes(data.getStringExtra("notes"));
+                edited.setCategory(data.getStringExtra("category"));
+
+                appHandler.updateExistingData(edited);
+            } else {
+                // Cancel all operations
             }
         }
     }
@@ -134,6 +161,11 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 int code = intent.getIntExtra("action", 400);
+                switch(code) {
+                    case 205:
+                        showListFragment();
+                        break;
+                }
                 recycledList.getAdapter().notifyDataSetChanged();
             }
         };

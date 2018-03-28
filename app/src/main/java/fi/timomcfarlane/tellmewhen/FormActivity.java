@@ -36,18 +36,42 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
+        initFields();
 
+
+        if(getIntent().hasExtra("edit")) {
+
+            title.setText(getIntent().getStringExtra("title"));
+            address.setText(getIntent().getStringExtra("address"));
+            notes.setText(getIntent().getStringExtra("notes"));
+            date.setText(getIntent().getStringExtra("date"));
+            time.setText(getIntent().getStringExtra("time"));
+
+            String category = getIntent().getStringExtra("category");
+
+            categorySpinner.setSelection(
+                    adapter.getPosition(
+                            category.substring(0,1).toUpperCase() + category.substring(1)
+                    ));
+        } else {
+            initDateTimePlaceholders();
+        }
+
+    }
+
+    public void initFields() {
         c = Calendar.getInstance();
         title = (EditText) findViewById(R.id.form_title);
         address = (EditText) findViewById(R.id.form_address);
         notes = (EditText) findViewById(R.id.form_notes);
         categorySpinner = (Spinner) findViewById(R.id.form_category);
+        date = (TextView) findViewById(R.id.form_date);
+        time = (TextView) findViewById(R.id.form_time);
         adapter = ArrayAdapter.createFromResource(this,
                 R.array.form_category_options, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
         categorySpinner.setOnItemSelectedListener(this);
-        initDateTimePlaceholders();
     }
 
     public void initDateTimePlaceholders() {
@@ -62,9 +86,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
                 c.get(Calendar.MINUTE)
         }, ':');
 
-        date = (TextView) findViewById(R.id.form_date);
         date.setText(dateText);
-        time = (TextView) findViewById(R.id.form_time);
         time.setText(timeText);
     }
 
@@ -132,6 +154,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("date", date.getText().toString());
         result.putExtra("time", time.getText().toString());
         result.putExtra("notes", notes.getText().toString());
+        result.putExtra("position", getIntent().getExtras().getInt("position"));
         setResult(RESULT_OK, result);
         finish();
     }
