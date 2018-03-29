@@ -38,6 +38,13 @@ public class AppointmentDetailsFragment extends Fragment {
         address.setText(getArguments().getString("address"));
         notes.setText(getArguments().getString("notes"));
         initCategoryImage(getArguments().getString("category"));
+
+        initClickListeners();
+
+        return view;
+    }
+
+    public void initClickListeners() {
         close.setOnClickListener((View v) -> {
             ((ScheduleActivity)getActivity()).showListFragment();
         });
@@ -50,8 +57,6 @@ public class AppointmentDetailsFragment extends Fragment {
             ((ScheduleActivity)getActivity())
                     .editAppointmentAtPosition(getArguments().getInt("position"));
         });
-
-        return view;
     }
 
     public void initViews() {
