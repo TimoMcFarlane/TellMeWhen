@@ -23,6 +23,8 @@ public class DateManipulationUtils {
                     + c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
 
 
+            Log.d("MSG", str);
+
         } catch(ParseException e) {
             Log.d("DEBUG", "Incorrect date format. Cannot parse.");
         }

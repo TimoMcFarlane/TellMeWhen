@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -77,7 +78,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     public void initDateTimePlaceholders() {
         String dateText = formatWithSeparator(new int[] {
                 c.get(Calendar.YEAR),
-                c.get(Calendar.MONTH),
+                c.get(Calendar.MONTH) + 1,
                 c.get(Calendar.DAY_OF_MONTH)
         }, '-');
 
@@ -154,7 +155,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("date", date.getText().toString());
         result.putExtra("time", time.getText().toString());
         result.putExtra("notes", notes.getText().toString());
-        result.putExtra("position", getIntent().getExtras().getInt("position"));
+        result.putExtra("position", getIntent().getIntExtra("position", 999));
         setResult(RESULT_OK, result);
         finish();
     }

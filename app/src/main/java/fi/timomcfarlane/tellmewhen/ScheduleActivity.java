@@ -118,10 +118,8 @@ public class ScheduleActivity extends AppCompatActivity {
                 edited.setTime(data.getStringExtra("time"));
                 edited.setNotes(data.getStringExtra("notes"));
                 edited.setCategory(data.getStringExtra("category"));
-
                 appHandler.updateExistingData(edited);
-            } else {
-                // Cancel all operations
+                showListFragment();
             }
         }
     }

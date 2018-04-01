@@ -21,7 +21,7 @@ public class AppointmentHandler {
         db = Room.databaseBuilder(host, AppDatabase.class, "database-appointments").build();
         apps = new ArrayList<>();
         lBroadcast = LocalBroadcastManager.getInstance(host);
-        getNewData();
+        new AsyncTaskHandler().execute("get");
     }
 
     public ArrayList<Appointment> getAppointments() {
@@ -30,24 +30,17 @@ public class AppointmentHandler {
 
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
-        new AsyncTaskHandler().execute("insert");
-        getNewData();
+        new AsyncTaskHandler().execute("insert", "get");
     }
 
     public void updateExistingData(Appointment... app) {
         currentAppointments = app;
-        new AsyncTaskHandler().execute("update");
-        getNewData();
+        new AsyncTaskHandler().execute("update", "get");
     }
 
     public void removeData(Appointment... app) {
         currentAppointments = app;
-        new AsyncTaskHandler().execute("delete");
-        getNewData();
-    }
-
-    public void getNewData() {
-        new AsyncTaskHandler().execute("get");
+        new AsyncTaskHandler().execute("delete", "get");
     }
 
     private class AsyncTaskHandler extends AsyncTask<String, Integer, Integer> {

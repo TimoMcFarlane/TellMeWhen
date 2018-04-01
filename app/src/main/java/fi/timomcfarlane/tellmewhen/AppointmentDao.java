@@ -14,6 +14,9 @@ public interface AppointmentDao {
     @Query("SELECT * FROM appointment ORDER BY date(date) ASC, time(time) ASC")
     List<Appointment> getAll();
 
+    // WEEKLY QUERY
+    // http://help.grow.com/manipulating-data-with-query-languages/sqlite/common-sqlite-queries
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAppointments(Appointment... appointments);
 
