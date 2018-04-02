@@ -22,9 +22,6 @@ public class DateManipulationUtils {
             str = c.get(Calendar.DAY_OF_MONTH) + ". "
                     + c.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH);
 
-
-            Log.d("MSG", str);
-
         } catch(ParseException e) {
             Log.d("DEBUG", "Incorrect date format. Cannot parse.");
         }

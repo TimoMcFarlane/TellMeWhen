@@ -1,9 +1,11 @@
 package fi.timomcfarlane.tellmewhen;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +34,18 @@ public class AppointmentDetailsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.schedule_detail_fragment, container, false);
         initViews();
+        initClickListeners();
         title.setText(getArguments().getString("title"));
         date.setText(createVerbalDate(getArguments().getString("date")));
         time.setText(getArguments().getString("time"));
         address.setText(getArguments().getString("address"));
         notes.setText(getArguments().getString("notes"));
         initCategoryImage(getArguments().getString("category"));
-
-        initClickListeners();
-
         return view;
     }
+
+
+
 
     public void initClickListeners() {
         close.setOnClickListener((View v) -> {

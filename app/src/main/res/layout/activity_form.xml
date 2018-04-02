@@ -133,11 +133,11 @@
             android:onClick="onFormCancel"/>
 
         <Button
+            android:id="@+id/submit_form"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
-            android:text="Create"
             android:onClick="onFormSubmit"/>
     </RelativeLayout>
 

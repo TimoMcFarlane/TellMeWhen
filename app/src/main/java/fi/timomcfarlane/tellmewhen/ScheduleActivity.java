@@ -59,6 +59,7 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
+        Log.d("MSG", "ScheduleActivity on Pause");
         super.onPause();
     }
 
@@ -103,14 +104,12 @@ public class ScheduleActivity extends AppCompatActivity {
                         data.getStringExtra("notes"),
                         data.getStringExtra("category")
                 ));
-            } else if(resultCode == RESULT_CANCELED) {
-                Log.d("MSG", "CANCELED");
             }
-        } else if(requestCode == EDIT_EXISTING_APPOINTMENT) {
+        }
+        else if(requestCode == EDIT_EXISTING_APPOINTMENT) {
             if(resultCode == RESULT_OK) {
-                Appointment edited =
-                        appHandler.getAppointments()
-                        .get(data.getExtras().getInt("position"));
+                Appointment edited = appHandler.getAppointments()
+                                        .get(data.getExtras().getInt("position"));
 
                 edited.setTitle(data.getStringExtra("title"));
                 edited.setAddress(data.getStringExtra("address"));
@@ -118,8 +117,8 @@ public class ScheduleActivity extends AppCompatActivity {
                 edited.setTime(data.getStringExtra("time"));
                 edited.setNotes(data.getStringExtra("notes"));
                 edited.setCategory(data.getStringExtra("category"));
-                appHandler.updateExistingData(edited);
-                showListFragment();
+                appHandler.updateExistingData(
+                        data.getIntExtra("position", 999), edited);
             }
         }
     }
@@ -127,7 +126,7 @@ public class ScheduleActivity extends AppCompatActivity {
     public void showListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container,listFragment)
+                .replace(R.id.fragment_container,listFragment, "list")
                 .commit();
     }
 
@@ -135,7 +134,7 @@ public class ScheduleActivity extends AppCompatActivity {
         details.setArguments(createBundleFromAppointment(position));
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, details)
+                .replace(R.id.fragment_container, details, "details")
                 .commit();
     }
 
@@ -160,6 +159,15 @@ public class ScheduleActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 int code = intent.getIntExtra("action", 400);
                 switch(code) {
+                    case 200:
+
+                        break;
+                    case 201:
+
+                        break;
+                    case 204:
+
+                        break;
                     case 205:
                         showListFragment();
                         break;
