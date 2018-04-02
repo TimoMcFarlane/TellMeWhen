@@ -33,6 +33,11 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         initBanner();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         listFragment = new AppointmentListFragment();
         details = new AppointmentDetailsFragment();
         getSupportFragmentManager()
