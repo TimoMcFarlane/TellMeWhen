@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView date;
     private TextView time;
     private EditText notes;
+    private Button submit;
 
 
     @Override
@@ -41,7 +43,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         if(getIntent().hasExtra("edit")) {
-
+            submit.setText("Edit");
             title.setText(getIntent().getStringExtra("title"));
             address.setText(getIntent().getStringExtra("address"));
             notes.setText(getIntent().getStringExtra("notes"));
@@ -55,6 +57,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
                             category.substring(0,1).toUpperCase() + category.substring(1)
                     ));
         } else {
+            submit.setText("Submit");
             initDateTimePlaceholders();
         }
 
@@ -73,6 +76,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
         categorySpinner.setOnItemSelectedListener(this);
+        submit = (Button) findViewById(R.id.submit_form);
     }
 
     public void initDateTimePlaceholders() {
