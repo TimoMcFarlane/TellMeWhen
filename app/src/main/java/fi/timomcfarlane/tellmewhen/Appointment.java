@@ -3,6 +3,10 @@ package fi.timomcfarlane.tellmewhen;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 @Entity(tableName = "appointment")
 public class Appointment {
@@ -21,7 +25,7 @@ public class Appointment {
     @ColumnInfo(name = "notes")
     private String notes;
     @ColumnInfo(name = "alarms")
-    private String alarms;
+    private ArrayList<AppointmentAlarm> alarms;
 
 
     public int getId() {
@@ -81,12 +85,13 @@ public class Appointment {
         this.category = category;
     }
 
-    public String getAlarms() {
+    @TypeConverters(DataTypeConverter.class)
+    public ArrayList<AppointmentAlarm> getAlarms() {
         return alarms;
     }
 
-    public void setAlarms(String alarms) {
-        this.alarms += "," + alarms;
+    public void setAlarms(ArrayList<AppointmentAlarm> alarms) {
+        this.alarms = alarms;
     }
 
     @Override
@@ -127,5 +132,16 @@ public class Appointment {
         this.notes = notes;
         this.category = category;
     }
+
+    public Appointment(String title, String address, String date, String time, String notes, String category, ArrayList<AppointmentAlarm> alarms) {
+        this.title = title;
+        this.address = address;
+        this.date = date;
+        this.time = time;
+        this.notes = notes;
+        this.category = category;
+        this.alarms = alarms;
+    }
+
 }
 
