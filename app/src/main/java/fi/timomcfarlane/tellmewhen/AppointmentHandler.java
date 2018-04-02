@@ -7,6 +7,8 @@ import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class AppointmentHandler {
 
@@ -30,17 +32,39 @@ public class AppointmentHandler {
 
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
-        new AsyncTaskHandler().execute("insert", "get");
+        order(apps);
+        new AsyncTaskHandler().execute("insert");
     }
 
-    public void updateExistingData(Appointment... app) {
+    public void updateExistingData(int position, Appointment... app) {
+        apps.set(position, app[0]);
+        order(apps);
         currentAppointments = app;
-        new AsyncTaskHandler().execute("update", "get");
+        new AsyncTaskHandler().execute("update");
     }
 
     public void removeData(Appointment... app) {
+        apps.remove(app[0]);
+        order(apps);
         currentAppointments = app;
-        new AsyncTaskHandler().execute("delete", "get");
+        new AsyncTaskHandler().execute("delete");
+    }
+
+    public void order(ArrayList<Appointment> appointments) {
+        Collections.sort(appointments, (o1, o2) -> {
+
+            String d1 = ((Appointment) o1).getDate();
+            String d2 = ((Appointment) o2).getDate();
+            int compResult = d1.compareTo(d2);
+
+            if (compResult != 0) {
+                return compResult;
+            }
+
+            String t1 = ((Appointment) o1).getTime();
+            String t2 = ((Appointment) o2).getTime();
+            return t1.compareTo(t2);
+        });
     }
 
     private class AsyncTaskHandler extends AsyncTask<String, Integer, Integer> {
