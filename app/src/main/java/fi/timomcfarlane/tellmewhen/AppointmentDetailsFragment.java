@@ -44,8 +44,10 @@ public class AppointmentDetailsFragment extends Fragment {
         return view;
     }
 
-
-
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     public void initClickListeners() {
         close.setOnClickListener((View v) -> {
@@ -94,5 +96,22 @@ public class AppointmentDetailsFragment extends Fragment {
                 categoryImg.setImageResource(R.drawable.personal_24dp);
                 break;
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Log.d("MSG", "ON ATTACH");
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d("MSG", "ON DETACH CALLED IN DETAILS");
+        super.onDetach();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+
     }
 }

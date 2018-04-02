@@ -96,6 +96,9 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void showDatePickerDialog(View v) {
+        if(v.getId() == R.id.form_date) {
+
+        }
         AppCompatDialogFragment dFragment = new DatePickerFragment();
         dFragment.show(getSupportFragmentManager(), "datePicker");
     }
@@ -147,8 +150,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void onFormCancel(View v) {
-        setResult(RESULT_CANCELED);
-        super.onBackPressed();
+        Intent i = new Intent();
+        i.putExtra("position", getIntent().getIntExtra("position", 999));
+        setResult(RESULT_CANCELED, i);
+        finish();
     }
 
     public void onFormSubmit(View v) {

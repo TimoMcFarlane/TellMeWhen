@@ -30,7 +30,7 @@ public class AppointmentListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        appHandler = new AppointmentHandler(getActivity());
+        appHandler = ((ScheduleActivity)getActivity()).getAppHandler();
         adapter = new RecyclerAdapter(getContext(), appHandler.getAppointments(), new CustomCardClickListener() {
             @Override
             public void onItemClick(View v, int position) {
@@ -41,11 +41,6 @@ public class AppointmentListFragment extends Fragment {
         recycledList.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycledList.setAdapter(adapter);
     }
-
-    public AppointmentHandler getAppHandler() {
-        return this.appHandler;
-    }
-
     public RecyclerView getList() {
         return this.recycledList;
     }

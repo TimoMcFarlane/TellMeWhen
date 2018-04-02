@@ -17,6 +17,10 @@ public class DatePickerFragment extends AppCompatDialogFragment
 
     private LocalBroadcastManager lBroadcast;
 
+    public DatePickerFragment() {
+
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         lBroadcast = LocalBroadcastManager.getInstance(getContext());

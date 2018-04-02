@@ -4,9 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.PersistableBundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -19,53 +21,72 @@ import java.util.Locale;
 public class ScheduleActivity extends AppCompatActivity {
     private final static int ADD_NEW_APPOINTMENT = 10;
     private final static int EDIT_EXISTING_APPOINTMENT = 12;
+    private boolean editCanceled;
+    private int editPosition;
     private BroadcastReceiver bReceiver;
     private AppointmentListFragment listFragment;
     private AppointmentDetailsFragment details;
-    private AppointmentHandler appHandler;
-    private RecyclerView recycledList;
     private TextView bannerMonth;
     private TextView bannerWeek;
     private Calendar calendar;
+    private AppointmentHandler appHandler;
+    private RecyclerView recycledList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         initBanner();
+        initRecycler();
+    }
+
+    public void initRecycler() {
+        appHandler = new AppointmentHandler(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d("SCHEDULE_ACTIVITY", "START");
         listFragment = new AppointmentListFragment();
         details = new AppointmentDetailsFragment();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, listFragment, "list")
-                .addToBackStack(null)
-                .commit();
+        showListFragment();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        appHandler = listFragment.getAppHandler();
         recycledList = listFragment.getList();
+        Log.d("SCHEDULE_ACTIVITY", "RESUME");
         setupBroadcastReceiver();
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        activateImmersiveUI();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if(editCanceled) {
+            viewDetailsFragment(editPosition);
+        }
     }
 
     @Override
     protected void onPause() {
+        Log.d("SCHEDULE_ACTIVITY", "PAUSE");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
-        Log.d("MSG", "ScheduleActivity on Pause");
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("SCHEDULE_ACTIVITY", "STOP");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d("SCHEDULE_ACTIVITY", "DESTROY");
+        super.onDestroy();
     }
 
     public void initBanner() {
@@ -89,6 +110,8 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void editAppointmentAtPosition(int position) {
+        editPosition = position;
+        editCanceled = false;
         Intent i = new Intent(this, FormActivity.class);
         Bundle b = createBundleFromAppointment(position);
         i.putExtras(b);
@@ -124,6 +147,9 @@ public class ScheduleActivity extends AppCompatActivity {
                 edited.setCategory(data.getStringExtra("category"));
                 appHandler.updateExistingData(
                         data.getIntExtra("position", 999), edited);
+            } else if(resultCode == RESULT_CANCELED) {
+
+                editCanceled = true;
             }
         }
     }
@@ -183,5 +209,18 @@ public class ScheduleActivity extends AppCompatActivity {
         LocalBroadcastManager
                 .getInstance(this)
                 .registerReceiver(bReceiver, new IntentFilter("appointment_handler"));
+    }
+
+    public void activateImmersiveUI() {
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+    }
+
+    public AppointmentHandler getAppHandler() {
+        return this.appHandler;
     }
 }
