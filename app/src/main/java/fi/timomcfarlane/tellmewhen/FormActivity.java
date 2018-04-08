@@ -43,24 +43,29 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
         if(getIntent().hasExtra("edit")) {
-            submit.setText("Edit");
-            title.setText(getIntent().getStringExtra("title"));
-            address.setText(getIntent().getStringExtra("address"));
-            notes.setText(getIntent().getStringExtra("notes"));
-            date.setText(getIntent().getStringExtra("date"));
-            time.setText(getIntent().getStringExtra("time"));
-
-            String category = getIntent().getStringExtra("category");
-
-            categorySpinner.setSelection(
-                    adapter.getPosition(
-                            category.substring(0,1).toUpperCase() + category.substring(1)
-                    ));
+            autoFillFormFields();
         } else {
             submit.setText("Submit");
             initDateTimePlaceholders();
         }
 
+    }
+
+    public void autoFillFormFields() {
+        autoFillFormFields();
+        submit.setText("Edit");
+        title.setText(getIntent().getStringExtra("title"));
+        address.setText(getIntent().getStringExtra("address"));
+        notes.setText(getIntent().getStringExtra("notes"));
+        date.setText(getIntent().getStringExtra("date"));
+        time.setText(getIntent().getStringExtra("time"));
+
+        String category = getIntent().getStringExtra("category");
+
+        categorySpinner.setSelection(
+                adapter.getPosition(
+                        category.substring(0,1).toUpperCase() + category.substring(1)
+                ));
     }
 
     public void initFields() {
@@ -147,6 +152,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public void createNewAlarm(View v) {
+        Log.d("MSG", "YOLO");
     }
 
     public void onFormCancel(View v) {

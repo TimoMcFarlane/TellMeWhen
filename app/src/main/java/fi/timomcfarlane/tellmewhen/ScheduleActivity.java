@@ -37,10 +37,10 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
         initBanner();
-        initRecycler();
+        initAppointmentHandler();
     }
 
-    public void initRecycler() {
+    public void initAppointmentHandler() {
         appHandler = new AppointmentHandler(this);
     }
 
@@ -77,18 +77,6 @@ public class ScheduleActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    @Override
-    protected void onStop() {
-        Log.d("SCHEDULE_ACTIVITY", "STOP");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        Log.d("SCHEDULE_ACTIVITY", "DESTROY");
-        super.onDestroy();
-    }
-
     public void initBanner() {
         bannerMonth = (TextView) findViewById(R.id.banner_month);
         bannerWeek = (TextView) findViewById(R.id.banner_week);
@@ -96,8 +84,6 @@ public class ScheduleActivity extends AppCompatActivity {
         bannerMonth.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
         bannerWeek.setText("WEEK " + calendar.get(Calendar.WEEK_OF_YEAR));
     }
-
-
 
     public void addNewAppointment(View v) {
         Intent i = new Intent(this, FormActivity.class);

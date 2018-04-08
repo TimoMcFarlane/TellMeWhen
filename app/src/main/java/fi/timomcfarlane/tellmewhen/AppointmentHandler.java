@@ -8,7 +8,6 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class AppointmentHandler {
 
@@ -33,7 +32,7 @@ public class AppointmentHandler {
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
         order(apps);
-        new AsyncTaskHandler().execute("insert");
+        new AsyncTaskHandler().execute("insert", "get");
     }
 
     public void updateExistingData(int position, Appointment... app) {

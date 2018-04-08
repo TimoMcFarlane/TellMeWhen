@@ -103,7 +103,20 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_add_circle_black_24dp"
             android:tint="@color/grey"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:onClick="createNewAlarm"/>
+
+        <RelativeLayout
+            android:id="@+id/form_alarms_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/form_alarms_created"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </RelativeLayout>
 
     </RelativeLayout>
     <RelativeLayout

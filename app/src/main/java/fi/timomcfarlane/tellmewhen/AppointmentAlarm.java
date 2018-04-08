@@ -2,24 +2,24 @@ package fi.timomcfarlane.tellmewhen;
 
 
 public class AppointmentAlarm {
-    private int actionCode;
+    private long creationTime;
     private String date;
     private String time;
 
     public AppointmentAlarm() {}
 
-    public AppointmentAlarm(int actionCode, String date, String time) {
-        this.actionCode = actionCode;
+    public AppointmentAlarm(long actionCode, String date, String time) {
+        this.creationTime = actionCode;
         this.date = date;
         this.time = time;
     }
 
-    public int getActionCode() {
-        return actionCode;
+    public long getActionCode() {
+        return creationTime;
     }
 
-    public void setActionCode(int actionCode) {
-        this.actionCode = actionCode;
+    public void setActionCode(long actionCode) {
+        this.creationTime = actionCode;
     }
 
     public String getDate() {
