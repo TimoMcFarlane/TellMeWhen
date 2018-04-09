@@ -56,7 +56,6 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void autoFillFormFields() {
-        autoFillFormFields();
         submit.setText("Edit");
         title.setText(getIntent().getStringExtra("title"));
         address.setText(getIntent().getStringExtra("address"));

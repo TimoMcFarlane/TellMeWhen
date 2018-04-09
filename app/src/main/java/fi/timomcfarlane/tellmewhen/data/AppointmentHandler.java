@@ -33,7 +33,6 @@ public class AppointmentHandler {
 
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
-        order(apps);
         new AsyncTaskHandler().execute("insert", "get");
     }
 
