@@ -12,7 +12,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-import static fi.timomcfarlane.tellmewhen.DateManipulationUtils.createVerbalDate;
+import fi.timomcfarlane.tellmewhen.data.model.Appointment;
+import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
+
+import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.createVerbalDate;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
 

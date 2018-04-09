@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.data;
 
 import android.arch.persistence.room.TypeConverter;
 
@@ -7,6 +7,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
 public class DataTypeConverter {
 

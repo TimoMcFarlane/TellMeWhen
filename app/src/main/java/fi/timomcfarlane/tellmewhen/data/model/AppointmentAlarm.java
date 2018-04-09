@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.data.model;
 
 
 public class AppointmentAlarm {
@@ -8,18 +8,18 @@ public class AppointmentAlarm {
 
     public AppointmentAlarm() {}
 
-    public AppointmentAlarm(long actionCode, String date, String time) {
-        this.creationTime = actionCode;
+    public AppointmentAlarm(long creationTime, String date, String time) {
+        this.creationTime = creationTime;
         this.date = date;
         this.time = time;
     }
 
-    public long getActionCode() {
+    public long getCreationTime() {
         return creationTime;
     }
 
-    public void setActionCode(long actionCode) {
-        this.creationTime = actionCode;
+    public void setCreationTime(long creationTime) {
+        this.creationTime = creationTime;
     }
 
     public String getDate() {

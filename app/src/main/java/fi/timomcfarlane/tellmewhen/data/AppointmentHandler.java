@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.data;
 
 import android.arch.persistence.room.Room;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 
 public class AppointmentHandler {
 

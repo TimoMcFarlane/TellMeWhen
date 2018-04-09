@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.utils;
 
 import android.view.View;
 

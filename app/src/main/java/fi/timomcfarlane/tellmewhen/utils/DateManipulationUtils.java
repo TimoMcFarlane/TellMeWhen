@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.utils;
 
 import android.util.Log;
 
@@ -26,6 +26,22 @@ public class DateManipulationUtils {
             Log.d("DEBUG", "Incorrect date format. Cannot parse.");
         }
         return str;
+    }
+
+    public static String formatWithSeparator(int[] temp, char separator) {
+        String formatted = "";
+
+        for(int i = 0; i < temp.length; i++) {
+            if(temp[i] < 10) {
+                formatted += ("0" + temp[i]);
+            } else {
+                formatted += temp[i];
+            }
+            if(i < temp.length - 1) {
+                formatted += separator;
+            }
+        }
+        return formatted;
     }
 
     public static Date createDateFromString(String strDate) {

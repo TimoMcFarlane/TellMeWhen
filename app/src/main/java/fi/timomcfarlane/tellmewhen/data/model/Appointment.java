@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.data.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,7 +6,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import fi.timomcfarlane.tellmewhen.data.DataTypeConverter;
 
 @Entity(tableName = "appointment")
 public class Appointment {

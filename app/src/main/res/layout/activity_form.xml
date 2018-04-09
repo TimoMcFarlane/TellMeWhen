@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/form_parent"
     android:padding="10dp"
-    tools:context="fi.timomcfarlane.tellmewhen.FormActivity">
+    tools:context="fi.timomcfarlane.tellmewhen.form.FormActivity">
     <LinearLayout
         android:id="@+id/form_title_row"
         android:layout_width="match_parent"

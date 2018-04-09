@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.form;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +18,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.Calendar;
+
+import fi.timomcfarlane.tellmewhen.R;
+
+import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.formatWithSeparator;
 
 public class FormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Spinner categorySpinner;
@@ -160,7 +164,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void onFormCancel(View v) {
         Intent i = new Intent();
-        i.putExtra("position", getIntent().getIntExtra("position", 999));
+        i.putExtra("position", getIntent().getIntExtra("position", -1));
         setResult(RESULT_CANCELED, i);
         finish();
     }
@@ -173,24 +177,8 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("date", date.getText().toString());
         result.putExtra("time", time.getText().toString());
         result.putExtra("notes", notes.getText().toString());
-        result.putExtra("position", getIntent().getIntExtra("position", 999));
+        result.putExtra("position", getIntent().getIntExtra("position", -1));
         setResult(RESULT_OK, result);
         finish();
-    }
-
-    public String formatWithSeparator(int[] temp, char separator) {
-        String formatted = "";
-
-        for(int i = 0; i < temp.length; i++) {
-            if(temp[i] < 10) {
-                formatted += ("0" + temp[i]);
-            } else {
-                formatted += temp[i];
-            }
-            if(i < temp.length - 1) {
-                formatted += separator;
-            }
-        }
-        return formatted;
     }
 }

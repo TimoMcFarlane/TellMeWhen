@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.form;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;

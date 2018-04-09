@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import fi.timomcfarlane.tellmewhen.data.AppointmentHandler;
+import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
+
 public class AppointmentListFragment extends Fragment {
     private AppointmentHandler appHandler;
     private RecyclerView recycledList;

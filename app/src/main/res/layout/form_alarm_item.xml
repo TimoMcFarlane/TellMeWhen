@@ -1,6 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/form_created_alarm_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_alarm_on_black_24dp"
+            android:layout_alignParentLeft="true"/>
+        <TextView
+            android:id="@+id/form_created_alarm_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/form_created_alarm_img"/>
+        <TextView
+            android:id="@+id/form_created_alarm_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/form_created_alarm_date"/>
+        <ImageView
+            android:id="@+id/form_created_alarm_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_remove_black_24dp"
+            android:layout_toRightOf="@id/form_created_alarm_time"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

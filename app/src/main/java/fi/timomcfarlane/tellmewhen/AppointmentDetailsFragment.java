@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import static fi.timomcfarlane.tellmewhen.DateManipulationUtils.createVerbalDate;
+import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.createVerbalDate;
 
 public class AppointmentDetailsFragment extends Fragment {
     private View view;
