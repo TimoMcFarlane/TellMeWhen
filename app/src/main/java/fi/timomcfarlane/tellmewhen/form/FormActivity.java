@@ -8,22 +8,29 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import fi.timomcfarlane.tellmewhen.R;
+import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
 import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.formatWithSeparator;
 
 public class FormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    private View root;
     private Spinner categorySpinner;
     private ArrayAdapter<CharSequence> adapter;
     private String appointmentDate;
@@ -37,6 +44,11 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     private TextView time;
     private EditText notes;
     private Button submit;
+    private ArrayList<AppointmentAlarm> alarms;
+    private String tempAlarmDate;
+    private String tempAlarmTime;
+    private AlarmListFragment alarmListFragment;
+    private String pickerAction;
 
 
     @Override
@@ -44,15 +56,29 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
         initFields();
-
-
+        attachGlobalFormListener();
         if(getIntent().hasExtra("edit")) {
             autoFillFormFields();
+            if(getIntent().hasExtra("alarms")) {
+                alarms = (ArrayList<AppointmentAlarm>) getIntent().getSerializableExtra("alarms");
+            } else {
+                alarms = new ArrayList<>();
+            }
         } else {
             submit.setText("Submit");
+            alarms = new ArrayList<>();
             initDateTimePlaceholders();
         }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        alarmListFragment = new AlarmListFragment();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.form_alarms_container, alarmListFragment)
+                .commit();
     }
 
     public void autoFillFormFields() {
@@ -87,6 +113,47 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         submit = (Button) findViewById(R.id.submit_form);
     }
 
+
+    public void attachGlobalFormListener() {
+        root = findViewById(R.id.form_parent);
+        root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int difference = root.getRootView().getHeight() - root.getHeight();
+                if (difference > changeDpToPx(getBaseContext(), 200) && notes.isFocused()) {
+                    findViewById(R.id.alarms).setVisibility(RelativeLayout.GONE);
+                    findViewById(R.id.form_alarms_container).setVisibility(RelativeLayout.GONE);
+                }
+                else if(difference < changeDpToPx(getBaseContext(), 200) && notes.isFocused()) {
+                    findViewById(R.id.alarms).setVisibility(RelativeLayout.VISIBLE);
+                    findViewById(R.id.form_alarms_container).setVisibility(RelativeLayout.VISIBLE);
+                }
+                else if(difference > changeDpToPx(getBaseContext(), 200) && !notes.isFocused()) {
+                    findViewById(R.id.form_footer).setVisibility(RelativeLayout.GONE);
+                    if(!findViewById(R.id.alarms).isShown()) {
+                        findViewById(R.id.alarms).setVisibility(RelativeLayout.VISIBLE);
+                        findViewById(R.id.form_alarms_container).setVisibility(RelativeLayout.VISIBLE);
+                    }
+                }
+                else if(difference < changeDpToPx(getBaseContext(), 200) && !notes.isFocused()) {
+                    findViewById(R.id.form_footer).setVisibility(RelativeLayout.VISIBLE);
+                    if(!findViewById(R.id.alarms).isShown()) {
+                        findViewById(R.id.alarms).setVisibility(RelativeLayout.VISIBLE);
+                        findViewById(R.id.form_alarms_container).setVisibility(RelativeLayout.VISIBLE);
+                    }
+                }
+
+            }
+        });
+    }
+
+
+    public float changeDpToPx(Context context, float valueInDp) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+    }
+
+
     public void initDateTimePlaceholders() {
         String dateText = formatWithSeparator(new int[] {
                 c.get(Calendar.YEAR),
@@ -104,9 +171,6 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void showDatePickerDialog(View v) {
-        if(v.getId() == R.id.form_date) {
-
-        }
         AppCompatDialogFragment dFragment = new DatePickerFragment();
         dFragment.show(getSupportFragmentManager(), "datePicker");
     }
@@ -119,26 +183,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onResume() {
         super.onResume();
-        bReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if(intent.getIntArrayExtra("date") != null) {
-                    int[] temp = intent.getIntArrayExtra("date");
-                    appointmentDate = "";
-                    appointmentDate = formatWithSeparator(temp, '-');
-                    date.setText(appointmentDate);
-
-                } else if(intent.getIntArrayExtra("time") != null) {
-                    int[] temp = intent.getIntArrayExtra("time");
-                    appointmentTime = "";
-                    appointmentTime = formatWithSeparator(temp, ':');
-                    time.setText(appointmentTime);
-                }
-            }
-        };
-        LocalBroadcastManager
-                .getInstance(this)
-                .registerReceiver(bReceiver, new IntentFilter("form_activity"));
+        setupBroadcastReceiver();
     }
 
     @Override
@@ -157,8 +202,46 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    public void setupBroadcastReceiver() {
+        bReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getIntArrayExtra("date") != null) {
+                    int[] temp = intent.getIntArrayExtra("date");
+                    appointmentDate = "";
+                    appointmentDate = formatWithSeparator(temp, '-');
+                    date.setText(appointmentDate);
+                } else if(intent.getIntArrayExtra("time") != null) {
+                    int[] temp = intent.getIntArrayExtra("time");
+                    appointmentTime = "";
+                    appointmentTime = formatWithSeparator(temp, ':');
+                    time.setText(appointmentTime);
+                } else if(intent.getIntArrayExtra("alarm_Date") != null) {
+                    int[] temp = intent.getIntArrayExtra("alarm_Date");
+                    tempAlarmDate = formatWithSeparator(temp, '-');
+                } else if(intent.getIntArrayExtra("alarm_Time") != null) {
+                    int[] temp = intent.getIntArrayExtra("alarm_Time");
+                    tempAlarmTime = formatWithSeparator(temp, ':');
+                    long tempTime = c.getTimeInMillis();
+                    if(tempAlarmTime.length() > 0 && tempAlarmDate.length() > 0) {
+                        alarms.add(new AppointmentAlarm(tempTime, tempAlarmDate, tempAlarmTime));
+                        alarmListFragment.getList().getAdapter().notifyDataSetChanged();
+                        tempAlarmDate = "";
+                        tempAlarmTime = "";
+                    }
+                    setPickerAction("");
+                }
+            }
+        };
+        LocalBroadcastManager
+                .getInstance(this)
+                .registerReceiver(bReceiver, new IntentFilter("form_activity"));
+    }
+
     public void createNewAlarm(View v) {
-        Log.d("MSG", "YOLO");
+        setPickerAction("alarm");
+        showTimePickerDialog(v);
+        showDatePickerDialog(v);
     }
 
     public void onFormCancel(View v) {
@@ -166,6 +249,18 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         i.putExtra("position", getIntent().getIntExtra("position", -1));
         setResult(RESULT_CANCELED, i);
         finish();
+    }
+
+    public ArrayList<AppointmentAlarm> getAlarms() {
+        return this.alarms;
+    }
+
+    public void setPickerAction(String a) {
+        this.pickerAction = a;
+    }
+
+    public String getPickerAction() {
+        return this.pickerAction;
     }
 
     public void onFormSubmit(View v) {
@@ -176,6 +271,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("date", date.getText().toString());
         result.putExtra("time", time.getText().toString());
         result.putExtra("notes", notes.getText().toString());
+        result.putExtra("alarms", getAlarms());
         result.putExtra("position", getIntent().getIntExtra("position", -1));
         setResult(RESULT_OK, result);
         finish();

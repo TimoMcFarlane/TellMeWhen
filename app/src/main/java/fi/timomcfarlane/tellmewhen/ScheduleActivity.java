@@ -12,11 +12,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import fi.timomcfarlane.tellmewhen.data.AppointmentHandler;
 import fi.timomcfarlane.tellmewhen.data.model.Appointment;
+import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 import fi.timomcfarlane.tellmewhen.form.FormActivity;
 
 
@@ -49,7 +51,6 @@ public class ScheduleActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("SCHEDULE_ACTIVITY", "START");
         listFragment = new AppointmentListFragment();
         details = new AppointmentDetailsFragment();
         showListFragment();
@@ -59,7 +60,6 @@ public class ScheduleActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         recycledList = listFragment.getList();
-        Log.d("SCHEDULE_ACTIVITY", "RESUME");
         setupBroadcastReceiver();
         activateImmersiveUI();
     }
@@ -74,7 +74,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        Log.d("SCHEDULE_ACTIVITY", "PAUSE");
         LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
         super.onPause();
     }
@@ -118,7 +117,8 @@ public class ScheduleActivity extends AppCompatActivity {
                         data.getStringExtra("date"),
                         data.getStringExtra("time"),
                         data.getStringExtra("notes"),
-                        data.getStringExtra("category")
+                        data.getStringExtra("category"),
+                        (ArrayList<AppointmentAlarm>) data.getSerializableExtra("alarms")
                 ));
             }
         }
@@ -133,10 +133,10 @@ public class ScheduleActivity extends AppCompatActivity {
                 edited.setTime(data.getStringExtra("time"));
                 edited.setNotes(data.getStringExtra("notes"));
                 edited.setCategory(data.getStringExtra("category"));
+                edited.setAlarms((ArrayList<AppointmentAlarm>) data.getSerializableExtra("alarms"));
                 appHandler.updateExistingData(
                         data.getIntExtra("position", 999), edited);
             } else if(resultCode == RESULT_CANCELED) {
-
                 editCanceled = true;
             }
         }
@@ -168,6 +168,7 @@ public class ScheduleActivity extends AppCompatActivity {
         payload.putString("time", clickedApp.getTime());
         payload.putString("category", clickedApp.getCategory());
         payload.putString("notes", clickedApp.getNotes());
+        payload.putSerializable("alarms", clickedApp.getAlarms());
         payload.putInt("position", position);
         return payload;
     }

@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".form.FormActivity"></activity>
+        <activity android:name=".form.FormActivity"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

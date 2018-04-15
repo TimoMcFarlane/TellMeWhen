@@ -47,7 +47,6 @@ public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        // Configure data to views using holder.view_id.setText
         AppointmentAlarm[] temp = new AppointmentAlarm[alarms.size()];
         temp = alarms.toArray(temp);
         holder.date.setText(temp[position].getDate());

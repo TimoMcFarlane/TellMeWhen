@@ -1,4 +1,4 @@
-package fi.timomcfarlane.tellmewhen;
+package fi.timomcfarlane.tellmewhen.form;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,39 +10,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import fi.timomcfarlane.tellmewhen.data.AppointmentHandler;
-import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
+import fi.timomcfarlane.tellmewhen.R;
 
-public class AppointmentListFragment extends Fragment {
-    private AppointmentHandler appHandler;
+
+
+public class AlarmListFragment extends Fragment {
     private RecyclerView recycledList;
-    private RecyclerAdapter adapter;
+    private AlarmRecyclerAdapter adapter;
     private View view;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if(view == null) {
-            view = inflater.inflate(R.layout.schedule_list_fragment,
-                    container,
-                    false);
-        }
+        view = inflater.inflate(R.layout.form_alarm_fragment, container, false);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        appHandler = ((ScheduleActivity)getActivity()).getAppHandler();
-        adapter = new RecyclerAdapter(
-                getContext(),
-                appHandler.getAppointments(),
-                (v, position) -> ((ScheduleActivity)getActivity()).viewDetailsFragment(position)
-        );
-        recycledList = (RecyclerView) view.findViewById(R.id.recycle_list);
+        adapter = new AlarmRecyclerAdapter(getContext(), ((FormActivity)getActivity()).getAlarms());
+        recycledList = (RecyclerView) view.findViewById(R.id.form_alarm_list);
         recycledList.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycledList.setAdapter(adapter);
     }
+
     public RecyclerView getList() {
         return this.recycledList;
     }

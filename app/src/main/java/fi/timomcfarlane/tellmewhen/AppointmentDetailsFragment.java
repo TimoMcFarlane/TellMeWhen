@@ -97,21 +97,4 @@ public class AppointmentDetailsFragment extends Fragment {
                 break;
         }
     }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        Log.d("MSG", "ON ATTACH");
-    }
-
-    @Override
-    public void onDetach() {
-        Log.d("MSG", "ON DETACH CALLED IN DETAILS");
-        super.onDetach();
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-
-    }
 }

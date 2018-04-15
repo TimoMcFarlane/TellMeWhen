@@ -1,7 +1,9 @@
 package fi.timomcfarlane.tellmewhen.data.model;
 
 
-public class AppointmentAlarm {
+import java.io.Serializable;
+
+public class AppointmentAlarm implements Serializable {
     private long creationTime;
     private String date;
     private String time;

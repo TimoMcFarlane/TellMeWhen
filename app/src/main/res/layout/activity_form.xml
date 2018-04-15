@@ -5,7 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/form_parent"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:animateLayoutChanges="true"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingBottom="5dp"
+    android:focusable="true"
+    android:scrollbars="vertical"
+    android:focusableInTouchMode="true"
     tools:context="fi.timomcfarlane.tellmewhen.form.FormActivity">
     <LinearLayout
         android:id="@+id/form_title_row"
@@ -17,6 +24,9 @@
             android:id="@+id/form_title"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
+            android:inputType="text"
+            android:maxLines="1"
+            android:imeOptions="actionDone"
             android:hint="Title"/>
         <Spinner
             android:id="@+id/form_category"
@@ -31,6 +41,9 @@
         android:layout_height="wrap_content"
         android:hint="Address"
         android:layout_marginBottom="10dp"
+        android:inputType="text"
+        android:maxLines="1"
+        android:imeOptions="actionDone"
         android:layout_below="@+id/form_title_row"/>
     <LinearLayout
         android:id="@+id/date_time"
@@ -84,10 +97,11 @@
     </LinearLayout>
     <RelativeLayout
         android:id="@+id/alarms"
+        android:animateLayoutChanges="true"
         android:layout_below="@+id/date_time"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginBottom="40dp">
+        android:onClick="createNewAlarm"
+        android:layout_height="40dp">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -95,50 +109,42 @@
             android:layout_marginLeft="5dp"
             android:text="Alarms"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:id="@+id/textView" />
+
         <ImageView
             android:id="@+id/form_add_alarm"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@+id/textView"
+            android:layout_alignParentEnd="true"
             android:src="@drawable/ic_add_circle_black_24dp"
-            android:tint="@color/grey"
-            android:layout_centerVertical="true"
-            android:onClick="createNewAlarm"/>
-
-        <RelativeLayout
-            android:id="@+id/form_alarms_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/form_alarms_created"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </android.support.v7.widget.RecyclerView>
-        </RelativeLayout>
-
+            android:tint="@color/grey" />
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/form_notes_wrapper"
+        android:id="@+id/form_alarms_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
+        android:layout_below="@+id/alarms"/>
+    <RelativeLayout
+        android:animateLayoutChanges="true"
+        android:id="@+id/form_footer"
+        android:layout_marginTop="-60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_below="@+id/alarms">
         <EditText
             android:id="@+id/form_notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Notes" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@+id/form_notes_wrapper"
-        android:layout_marginTop="20dp">
-
+            android:scrollbars="vertical|horizontal"
+            android:maxLines="5"
+            android:lines="5"
+            android:hint="Notes"
+            android:layout_above="@+id/form_cancel"/>
         <Button
+            android:id="@+id/form_cancel"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -154,5 +160,4 @@
             android:layout_alignParentRight="true"
             android:onClick="onFormSubmit"/>
     </RelativeLayout>
-
 </RelativeLayout>
