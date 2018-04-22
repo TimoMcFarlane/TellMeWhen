@@ -69,6 +69,7 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
             alarms = new ArrayList<>();
             initDateTimePlaceholders();
         }
+        setPickerAction("not_alarm");
     }
 
     @Override
@@ -106,9 +107,11 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         date = (TextView) findViewById(R.id.form_date);
         time = (TextView) findViewById(R.id.form_time);
         adapter = ArrayAdapter.createFromResource(this,
-                R.array.form_category_options, R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+                R.array.form_category_options, R.layout.category_spinner_item);
+        adapter.setDropDownViewResource(R.layout.category_spinner_item);
+
         categorySpinner.setAdapter(adapter);
+
         categorySpinner.setOnItemSelectedListener(this);
         submit = (Button) findViewById(R.id.submit_form);
     }
@@ -171,11 +174,21 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void showDatePickerDialog(View v) {
+        if(v.getId() != R.id.form_date) {
+            setPickerAction("alarm");
+        } else {
+            setPickerAction("not_alarm");
+        }
         AppCompatDialogFragment dFragment = new DatePickerFragment();
         dFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
     public void showTimePickerDialog(View v) {
+        if(v.getId() != R.id.form_time) {
+            setPickerAction("alarm");
+        } else {
+            setPickerAction("not_alarm");
+        }
         AppCompatDialogFragment tFragment = new TimePickerFragment();
         tFragment.show(getSupportFragmentManager(), "timePicker");
     }
@@ -244,6 +257,11 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         showDatePickerDialog(v);
     }
 
+    public void removeAlarm(int position) {
+        alarms.remove(position);
+        alarmListFragment.getList().getAdapter().notifyDataSetChanged();
+    }
+
     public void onFormCancel(View v) {
         Intent i = new Intent();
         i.putExtra("position", getIntent().getIntExtra("position", -1));
@@ -274,6 +292,11 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("alarms", getAlarms());
         result.putExtra("position", getIntent().getIntExtra("position", -1));
         setResult(RESULT_OK, result);
+
+        // Include creation of alarms.
+        // Extras to intent
+        // Schedule alarms into system
+
         finish();
     }
 }

@@ -13,26 +13,32 @@ import java.util.ArrayList;
 
 import fi.timomcfarlane.tellmewhen.R;
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
+import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
 
 public class AlarmRecyclerAdapter extends RecyclerView.Adapter<AlarmRecyclerAdapter.ViewHolder> {
 
     private ArrayList<AppointmentAlarm> alarms;
     private Context host;
+    private static CustomCardClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // Views to be initialised
         public TextView date;
         public TextView time;
+        public CardView del;
         public ViewHolder(View itemView) {
             super(itemView);
             date = (TextView) itemView.findViewById(R.id.form_created_alarm_date);
             time = (TextView) itemView.findViewById(R.id.form_created_alarm_time);
+            del = (CardView) itemView.findViewById(R.id.form_created_alarm_remove);
+            del.setOnClickListener(view -> listener.onItemClick(view, getAdapterPosition()));
         }
     }
 
-    public AlarmRecyclerAdapter(Context context, ArrayList<AppointmentAlarm> alarms) {
+    public AlarmRecyclerAdapter(Context context, ArrayList<AppointmentAlarm> alarms, CustomCardClickListener listener) {
         this.alarms = alarms;
         this.host = context;
+        this.listener = listener;
     }
 
     @NonNull

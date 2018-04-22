@@ -30,7 +30,11 @@ public class AlarmListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        adapter = new AlarmRecyclerAdapter(getContext(), ((FormActivity)getActivity()).getAlarms());
+        adapter = new AlarmRecyclerAdapter(
+                getContext(),
+                ((FormActivity)getActivity()).getAlarms(),
+                (v, position) -> ((FormActivity)getActivity()).removeAlarm(position)
+        );
         recycledList = (RecyclerView) view.findViewById(R.id.form_alarm_list);
         recycledList.setLayoutManager(new LinearLayoutManager(getActivity()));
         recycledList.setAdapter(adapter);
