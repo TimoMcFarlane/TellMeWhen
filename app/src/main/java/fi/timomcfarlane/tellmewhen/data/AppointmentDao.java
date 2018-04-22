@@ -13,11 +13,16 @@ import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 
 @Dao
 public interface AppointmentDao {
-    @Query("SELECT * FROM appointment ORDER BY date(date) ASC, time(time) ASC")
-    List<Appointment> getAll();
+    /*@Query("SELECT * FROM appointment ORDER BY date(date) ASC, time(time) ASC")
+    List<Appointment> getAll();*/
 
     // WEEKLY QUERY
     // http://help.grow.com/manipulating-data-with-query-languages/sqlite/common-sqlite-queries
+    @Query("SELECT * FROM appointment"+
+            " WHERE date(date) > date('now')"+
+            " AND date(date) < date('now', '+8 days')"+
+            " ORDER BY date(date) ASC, time(time) ASC")
+    List<Appointment> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAppointments(Appointment... appointments);
