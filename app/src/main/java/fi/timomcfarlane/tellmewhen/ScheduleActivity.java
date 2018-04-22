@@ -26,6 +26,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private final static int ADD_NEW_APPOINTMENT = 10;
     private final static int EDIT_EXISTING_APPOINTMENT = 12;
     private boolean editCanceled;
+    private boolean addCanceled;
     private int editPosition;
     private BroadcastReceiver bReceiver;
     private AppointmentListFragment listFragment;
@@ -70,6 +71,9 @@ public class ScheduleActivity extends AppCompatActivity {
         if(editCanceled) {
             viewDetailsFragment(editPosition);
         }
+        if(addCanceled) {
+            showListFragment();
+        }
     }
 
     @Override
@@ -87,6 +91,7 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void addNewAppointment(View v) {
+        addCanceled = false;
         Intent i = new Intent(this, FormActivity.class);
         startActivityForResult(i, ADD_NEW_APPOINTMENT);
     }
@@ -120,6 +125,8 @@ public class ScheduleActivity extends AppCompatActivity {
                         data.getStringExtra("category"),
                         (ArrayList<AppointmentAlarm>) data.getSerializableExtra("alarms")
                 ));
+            } else if(resultCode == RESULT_CANCELED) {
+                addCanceled = true;
             }
         }
         else if(requestCode == EDIT_EXISTING_APPOINTMENT) {
