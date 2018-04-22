@@ -2,6 +2,7 @@
 <android.support.v7.widget.CardView
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
+    android:backgroundTint="@color/card_background"
     android:layout_marginTop="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -17,12 +18,14 @@
             android:id="@+id/form_created_alarm_img"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:tint="@color/white"
             android:src="@drawable/ic_alarm_on_black_24dp"
             android:layout_alignParentLeft="true"/>
         <TextView
             android:id="@+id/form_created_alarm_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/form_created_alarm_img"/>
@@ -30,17 +33,18 @@
             android:id="@+id/form_created_alarm_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/form_created_alarm_date"/>
         <android.support.v7.widget.CardView
+            android:id="@+id/form_created_alarm_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/work"
             android:layout_alignParentRight="true"
             app:cardCornerRadius="12dp">
             <ImageView
-                android:id="@+id/form_created_alarm_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_remove_black_24dp"

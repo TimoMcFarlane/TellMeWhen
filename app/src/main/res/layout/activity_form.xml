@@ -10,6 +10,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingBottom="5dp"
+    android:background="@color/background"
     android:focusable="true"
     android:scrollbars="vertical"
     android:focusableInTouchMode="true"
@@ -27,12 +28,15 @@
             android:inputType="text"
             android:maxLines="1"
             android:imeOptions="actionDone"
-            android:hint="Title"/>
+            android:textColor="@color/white"
+            android:hint="Title"
+            android:textColorHint="@color/white"/>
         <Spinner
             android:id="@+id/form_category"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp">
+            android:layout_marginLeft="40dp"
+            android:backgroundTint="@color/green">
         </Spinner>
     </LinearLayout>
     <EditText
@@ -40,8 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Address"
+        android:textColor="@color/white"
         android:layout_marginBottom="10dp"
         android:inputType="text"
+        android:textColorHint="@color/white"
         android:maxLines="1"
         android:imeOptions="actionDone"
         android:layout_below="@+id/form_title_row"/>
@@ -67,6 +73,7 @@
             <TextView
                 android:id="@+id/form_date"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:textSize="20sp"
@@ -88,6 +95,7 @@
             <TextView
                 android:id="@+id/form_time"
                 android:layout_width="match_parent"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:textSize="20sp"
@@ -108,6 +116,7 @@
             android:textSize="20sp"
             android:layout_marginLeft="5dp"
             android:text="Alarms"
+            android:textColor="@color/white"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:id="@+id/textView" />
@@ -119,7 +128,7 @@
             android:layout_alignBottom="@+id/textView"
             android:layout_alignParentEnd="true"
             android:src="@drawable/ic_add_circle_black_24dp"
-            android:tint="@color/grey" />
+            android:tint="@color/green" />
     </RelativeLayout>
     <RelativeLayout
         android:id="@+id/form_alarms_container"
@@ -136,6 +145,8 @@
         android:layout_below="@+id/alarms">
         <EditText
             android:id="@+id/form_notes"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical|horizontal"
