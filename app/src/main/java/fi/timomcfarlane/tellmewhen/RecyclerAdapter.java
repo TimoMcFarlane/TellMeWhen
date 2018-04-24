@@ -64,13 +64,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
-        Appointment[] temp = new Appointment[apps.size()];
-        temp = apps.toArray(temp);
-        holder.card_title.setText(temp[position].getTitle());
-        holder.card_address.setText(temp[position].getAddress());
-        holder.card_time.setText(temp[position].getTime());
-        holder.card_date.setText(createVerbalDate(temp[position].getDate()));
-        addCategoryTint(holder, temp[position]);
+        try {
+            Thread.sleep(20);
+            if(position != RecyclerView.NO_POSITION) {
+                Appointment[] temp = new Appointment[apps.size()];
+                temp = apps.toArray(temp);
+                holder.card_title.setText(temp[position].getTitle());
+                holder.card_address.setText(temp[position].getAddress());
+                holder.card_time.setText(temp[position].getTime());
+                holder.card_date.setText(createVerbalDate(temp[position].getDate()));
+                addCategoryTint(holder, temp[position]);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addCategoryTint(ViewHolder holder, Appointment appointment) {

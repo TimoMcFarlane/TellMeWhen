@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
 import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 
@@ -18,12 +23,32 @@ public class AppointmentHandler {
     private Context host;
     private LocalBroadcastManager lBroadcast;
     private Appointment[] currentAppointments;
+    public Calendar offsetCal;
+    public SimpleDateFormat sdf;
+    public String dateStr;
 
     public AppointmentHandler(Context host) {
         this.host = host;
         db = Room.databaseBuilder(host, AppDatabase.class, "database-appointments").build();
         apps = new ArrayList<>();
         lBroadcast = LocalBroadcastManager.getInstance(host);
+        offsetCal = Calendar.getInstance();
+        offsetCal.set(Calendar.DAY_OF_WEEK, offsetCal.getFirstDayOfWeek());
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        dateStr = sdf.format(offsetCal.getTime());
+        addWeekToCurrentWeekOffset();
+    }
+
+
+    public void addWeekToCurrentWeekOffset() {
+        offsetCal.add(Calendar.DAY_OF_YEAR, 7);
+        dateStr = sdf.format(offsetCal.getTime());
+        new AsyncTaskHandler().execute("get");
+    }
+
+    public void removeWeekFromCurrentWeekOffset() {
+        offsetCal.add(Calendar.DAY_OF_YEAR, -7);
+        dateStr = sdf.format(offsetCal.getTime());
         new AsyncTaskHandler().execute("get");
     }
 
@@ -48,6 +73,19 @@ public class AppointmentHandler {
         order(apps);
         currentAppointments = app;
         new AsyncTaskHandler().execute("delete");
+    }
+
+    public int findByAlarm(long creationTime) {
+        for(int i = 0; i < apps.size(); i++) {
+            if(apps.get(i).getAlarms().size() != 0) {
+                for(int x = 0; x < apps.get(i).getAlarms().size(); x++) {
+                    if(apps.get(i).getAlarms().get(x).getCreationTime() == creationTime) {
+                        return i;
+                    }
+                }
+            }
+        }
+        return -1;
     }
 
     public void order(ArrayList<Appointment> appointments) {
@@ -76,7 +114,7 @@ public class AppointmentHandler {
                 switch(actions[i]) {
                     case "get":
                         apps.clear();
-                        apps.addAll(db.appointmentDao().getAll());
+                        apps.addAll(db.appointmentDao().getAll(dateStr));
                         actionCode = 200;
                         break;
                     case "insert":
@@ -98,6 +136,7 @@ public class AppointmentHandler {
 
         @Override
         protected void onPostExecute(Integer code) {
+            Log.d("MSG", apps.size() + "");
             Intent i = new Intent("appointment_handler");
             i.putExtra("action", code);
             lBroadcast.sendBroadcast(i);

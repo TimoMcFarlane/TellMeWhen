@@ -7,11 +7,19 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionManager;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -25,15 +33,19 @@ import fi.timomcfarlane.tellmewhen.form.FormActivity;
 public class ScheduleActivity extends AppCompatActivity {
     private final static int ADD_NEW_APPOINTMENT = 10;
     private final static int EDIT_EXISTING_APPOINTMENT = 12;
+    private Animation fadeIn;
+    private Animation fadeOut;
     private boolean editCanceled;
     private boolean addCanceled;
+    private boolean initFromNotification;
     private int editPosition;
     private BroadcastReceiver bReceiver;
     private AppointmentListFragment listFragment;
     private AppointmentDetailsFragment details;
+    private RelativeLayout banner;
     private TextView bannerMonth;
     private TextView bannerWeek;
-    private Calendar calendar;
+    private Calendar calendarNow;
     private AppointmentHandler appHandler;
     private RecyclerView recycledList;
 
@@ -41,6 +53,7 @@ public class ScheduleActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule);
+        calendarNow = Calendar.getInstance();
         initBanner();
         initAppointmentHandler();
     }
@@ -63,6 +76,11 @@ public class ScheduleActivity extends AppCompatActivity {
         recycledList = listFragment.getList();
         setupBroadcastReceiver();
         activateImmersiveUI();
+        if(getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().size() > 0) {
+            this.initFromNotification = true;
+        } else {
+            this.initFromNotification = false;
+        }
     }
 
     @Override
@@ -74,6 +92,12 @@ public class ScheduleActivity extends AppCompatActivity {
         if(addCanceled) {
             showListFragment();
         }
+
+        if(initFromNotification) {
+            Bundle extras = getIntent().getExtras();
+            int position = appHandler.findByAlarm(extras.getLong("details"));
+            viewDetailsFragment(position);
+        }
     }
 
     @Override
@@ -83,11 +107,24 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void initBanner() {
+        banner = (RelativeLayout) findViewById(R.id.banner);
         bannerMonth = (TextView) findViewById(R.id.banner_month);
         bannerWeek = (TextView) findViewById(R.id.banner_week);
-        calendar = Calendar.getInstance();
-        bannerMonth.setText(calendar.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
-        bannerWeek.setText("WEEK " + calendar.get(Calendar.WEEK_OF_YEAR));
+        setBanner();
+    }
+
+    public void setBanner() {
+        bannerWeek.setText("WEEK " + calendarNow.get(Calendar.WEEK_OF_YEAR));
+        bannerMonth.setText(calendarNow.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
+        if (calendarNow.get(Calendar.MONTH) == 11 || calendarNow.get(Calendar.MONTH) <= 1) {
+            banner.setBackgroundResource(R.drawable.winter);
+        } else if (calendarNow.get(Calendar.MONTH) >= 2 && calendarNow.get(Calendar.MONTH) <= 4) {
+            banner.setBackgroundResource(R.drawable.spring);
+        } else if (calendarNow.get(Calendar.MONTH) >= 5 && calendarNow.get(Calendar.MONTH) <= 7) {
+            banner.setBackgroundResource(R.drawable.summer);
+        } else {
+            banner.setBackgroundResource(R.drawable.autumn);
+        }
     }
 
     public void addNewAppointment(View v) {
@@ -110,6 +147,18 @@ public class ScheduleActivity extends AppCompatActivity {
         i.putExtra("edit", true);
         i.putExtra("position", position);
         startActivityForResult(i, EDIT_EXISTING_APPOINTMENT);
+    }
+
+    public void changeWeek(View v) {
+        if(v.getId() == R.id.left_arrow) {
+            calendarNow.add(Calendar.DAY_OF_YEAR, -7);
+
+            appHandler.removeWeekFromCurrentWeekOffset();
+        } else if(v.getId() == R.id.right_arrow) {
+            calendarNow.add(Calendar.DAY_OF_YEAR, 7);
+            appHandler.addWeekToCurrentWeekOffset();
+        }
+        setBanner();
     }
 
     @Override
@@ -157,14 +206,15 @@ public class ScheduleActivity extends AppCompatActivity {
     }
 
     public void viewDetailsFragment(int position) {
-        details.setArguments(createBundleFromAppointment(position));
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, details, "details")
-                .commit();
+        Log.d("MSG", "Position value: " + position);
+        if(position != -1) {
+            details.setArguments(createBundleFromAppointment(position));
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, details, "details")
+                    .commit();
+        }
     }
-
-
 
     public Bundle createBundleFromAppointment(int position) {
         Appointment clickedApp = appHandler.getAppointments().get(position);
@@ -187,19 +237,20 @@ public class ScheduleActivity extends AppCompatActivity {
                 int code = intent.getIntExtra("action", 400);
                 switch(code) {
                     case 200:
-
+                        recycledList.getAdapter().notifyDataSetChanged();
                         break;
                     case 201:
 
                         break;
                     case 204:
-
+                        recycledList.getAdapter().notifyDataSetChanged();
                         break;
                     case 205:
+                        recycledList.getAdapter().notifyDataSetChanged();
                         showListFragment();
                         break;
                 }
-                recycledList.getAdapter().notifyDataSetChanged();
+
             }
         };
         LocalBroadcastManager

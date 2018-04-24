@@ -1,5 +1,7 @@
 package fi.timomcfarlane.tellmewhen.form;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,12 +23,17 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
+import fi.timomcfarlane.tellmewhen.AppointmentAlarmReceiver;
 import fi.timomcfarlane.tellmewhen.R;
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.formatWithSeparator;
 
 public class FormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -150,7 +157,6 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
-
     public float changeDpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
@@ -258,6 +264,17 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
     public void removeAlarm(int position) {
+        if(getIntent().hasExtra("edit")) {
+            Intent intent = new Intent(getBaseContext(), AppointmentAlarmReceiver.class);
+            intent.setAction("tellmewhen.appointment.ALARM");
+            PendingIntent pi = PendingIntent.getBroadcast(
+                    getBaseContext(),
+                    (int) alarms.get(position).getCreationTime(),
+                    intent,0
+            );
+            AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            am.cancel(pi);
+        }
         alarms.remove(position);
         alarmListFragment.getList().getAdapter().notifyDataSetChanged();
     }
@@ -291,12 +308,41 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         result.putExtra("notes", notes.getText().toString());
         result.putExtra("alarms", getAlarms());
         result.putExtra("position", getIntent().getIntExtra("position", -1));
+        activateAlarms();
         setResult(RESULT_OK, result);
-
-        // Include creation of alarms.
-        // Extras to intent
-        // Schedule alarms into system
-
         finish();
+    }
+
+    public void activateAlarms() {
+        if(this.alarms.size() > 0) {
+            AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+            Intent i = new Intent(getBaseContext(), AppointmentAlarmReceiver.class);
+            i.setAction("tellmewhen.appointment.ALARM");
+
+            i.putExtra("title", title.getText().toString());
+            i.putExtra("address", address.getText().toString());
+            i.putExtra("date", date.getText().toString());
+            i.putExtra("time", time.getText().toString());
+            i.addFlags(FLAG_ACTIVITY_SINGLE_TOP);
+            Calendar cal = null;
+            for (int x = 0; x < this.alarms.size(); x++) {
+                AppointmentAlarm alarm = this.alarms.get(x);
+                i.putExtra("creationtime", alarm.getCreationTime());
+                PendingIntent pi = PendingIntent.getBroadcast(getBaseContext(), (int) alarm.getCreationTime(), i, 0);
+                try {
+                    cal = createDateTimeFromString(alarm.getDate(), alarm.getTime());
+                    alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public Calendar createDateTimeFromString(String date, String time) throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        cal.setTime(sdf.parse(date + " " + time));
+        return cal;
     }
 }

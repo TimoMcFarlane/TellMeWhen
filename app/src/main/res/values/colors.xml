@@ -4,11 +4,13 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#3cb26b</color>
     <color name="background">#2E2E2E</color>
+    <color name="text_bg">#802E2E2E</color>
     <color name="card_background">#545454</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="grey">#BDBDBD</color>
     <color name="green">#3cb26b</color>
+    <color name="green_alpha">#663cb26b</color>
     <color name="social">#448AC9</color>
     <color name="work">#C94444</color>
     <color name="personal">#C97444</color>

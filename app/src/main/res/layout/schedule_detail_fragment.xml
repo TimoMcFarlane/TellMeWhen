@@ -120,19 +120,19 @@
                 </ScrollView>
                 <TextView
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="20sp"
                     android:id="@+id/details_alarms_title"
                     android:layout_marginTop="20dp"
                     android:layout_below="@+id/details_notes_scroll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Scheduled Alarms"/>
-                <ScrollView
+                <android.support.v7.widget.RecyclerView
+                    android:layout_below="@id/details_alarms_title"
                     android:id="@+id/details_alarms"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
-
-                </ScrollView>
+                </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
             <RelativeLayout

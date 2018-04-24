@@ -10,10 +10,11 @@
         android:scrollbars="vertical"
         android:background="@color/background" />
     <android.support.v7.widget.CardView
+        android:id="@+id/add_new_app"
         android:layout_width="65dp"
         android:layout_height="65dp"
         app:cardCornerRadius="32.5dp"
-        android:backgroundTint="@color/green"
+        android:backgroundTint="@color/green_alpha"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="15dp"

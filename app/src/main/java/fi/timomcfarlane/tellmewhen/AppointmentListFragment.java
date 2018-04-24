@@ -37,7 +37,11 @@ public class AppointmentListFragment extends Fragment {
         adapter = new RecyclerAdapter(
                 getContext(),
                 appHandler.getAppointments(),
-                (v, position) -> ((ScheduleActivity)getActivity()).viewDetailsFragment(position)
+                (v, position) -> {
+                    if(position != RecyclerView.NO_POSITION) {
+                        ((ScheduleActivity) getActivity()).viewDetailsFragment(position);
+                    }
+                }
         );
         recycledList = (RecyclerView) view.findViewById(R.id.recycle_list);
         recycledList.setLayoutManager(new LinearLayoutManager(getActivity()));

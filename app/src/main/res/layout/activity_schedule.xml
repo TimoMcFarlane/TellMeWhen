@@ -4,42 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:orientation="vertical"
     tools:context="fi.timomcfarlane.tellmewhen.ScheduleActivity">
 
     <RelativeLayout
+        android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/test"
         android:layout_weight="0.7">
         <RelativeLayout
+            android:background="@color/text_bg"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <TextView
+                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/banner_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textSize="40sp"
                 android:shadowColor="@color/black"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="2"/>
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"/>
             <TextView
+                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/banner_week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="20sp"
                 android:layout_below="@+id/banner_month"
                 android:shadowColor="@color/black"
                 android:shadowDx="2"
                 android:shadowDy="2"
-                android:shadowRadius="4"/>
+                android:shadowRadius="8"/>
+            <ImageView
+                android:src="@drawable/ic_keyboard_arrow_left_black_48dp"
+                android:tint="@color/white"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/banner_month"
+                android:id="@+id/left_arrow"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="@color/black"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"
+                android:onClick="changeWeek"/>
+            <ImageView
+                android:src="@drawable/ic_keyboard_arrow_right_black_48dp"
+                android:tint="@color/white"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@id/banner_month"
+                android:id="@+id/right_arrow"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:shadowColor="@color/black"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="8"
+                android:onClick="changeWeek"/>
         </RelativeLayout>
     </RelativeLayout>
     <RelativeLayout
