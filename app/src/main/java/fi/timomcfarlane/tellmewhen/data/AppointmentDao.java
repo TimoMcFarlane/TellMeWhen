@@ -14,6 +14,11 @@ import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 @Dao
 public interface AppointmentDao {
     @Query("SELECT * FROM appointment"+
+            " WHERE date(date) >= date('now')" +
+            " ORDER BY date(date) ASC, time(time) ASC")
+    List<Appointment> getAllFutureAppointments();
+
+    @Query("SELECT * FROM appointment"+
             " WHERE date(date) >= date(:date, '-7 days')"+
             " AND date(date) < date(:date)" +
             " ORDER BY date(date) ASC, time(time) ASC")

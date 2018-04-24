@@ -143,17 +143,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true">
                 <ImageView
-                    android:layout_alignParentBottom="true"
-                    android:id="@+id/details_maps_btn"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_alignParentLeft="true"
-                    android:tint="@color/white"
-                    android:src="@drawable/maps_24dp"/>
-                <ImageView
                     android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_toRightOf="@id/details_maps_btn"
                     android:id="@+id/details_edit_btn"
                     android:layout_width="32dp"
                     android:layout_height="32dp"

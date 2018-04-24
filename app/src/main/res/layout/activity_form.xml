@@ -33,9 +33,9 @@
             android:textColorHint="@color/white"/>
         <Spinner
             android:id="@+id/form_category"
-            android:layout_width="120dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
+            android:layout_marginLeft="20dp"
             android:backgroundTint="@color/green">
         </Spinner>
     </LinearLayout>
