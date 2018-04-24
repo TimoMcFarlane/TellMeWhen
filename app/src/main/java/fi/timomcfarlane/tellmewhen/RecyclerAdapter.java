@@ -16,7 +16,13 @@ import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
 
 import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.createVerbalDate;
-
+/**
+ * RecyclerAdapter for Recyclerview inside Fragment that displays a list of appointments
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder>{
 
     private ArrayList<Appointment> apps;
@@ -24,6 +30,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     private Context host;
     private CustomCardClickListener listener;
 
+    /**
+     * Init views inside viewholder
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public CardView card;
         public TextView card_title;
@@ -51,6 +60,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         this.listener = listener;
     }
 
+    /**
+     * Inflate view, create viewholder and set cardview onclick using custom interface
+     * @param parent default
+     * @param viewType default
+     * @return ViewHolder (CardView)
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -62,6 +77,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         return vh;
     }
 
+    /**
+     * Set view data according to data at given position
+     * @param holder default
+     * @param position position of element
+     */
     @Override
     public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
         try {
@@ -80,6 +100,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         }
     }
 
+    /**
+     * Set card category view image and background color based on provided category
+     * @param holder ViewHolder
+     * @param appointment Current appointment
+     */
     private void addCategoryTint(ViewHolder holder, Appointment appointment) {
         switch(appointment.getCategory()) {
             case "work":

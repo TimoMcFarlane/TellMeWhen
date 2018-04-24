@@ -15,7 +15,13 @@ import java.util.Date;
 import java.util.Locale;
 
 import fi.timomcfarlane.tellmewhen.data.model.Appointment;
-
+/**
+ * Class used for handling all the applications data and dataflow using AsyncTask.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class AppointmentHandler {
 
     private AppDatabase db;
@@ -27,6 +33,11 @@ public class AppointmentHandler {
     public SimpleDateFormat sdf;
     public String dateStr;
 
+
+    /**
+     * Initialize database and calendar, broadcast current week data to ScheduleActivity.
+     * @param host
+     */
     public AppointmentHandler(Context host) {
         this.host = host;
         db = Room.databaseBuilder(host, AppDatabase.class, "database-appointments").build();
@@ -39,28 +50,47 @@ public class AppointmentHandler {
         addWeekToCurrentWeekOffset();
     }
 
-
+    /**
+     * Add 7 days calendar and retrieve new data based on the adjusted calendar date
+     */
     public void addWeekToCurrentWeekOffset() {
         offsetCal.add(Calendar.DAY_OF_YEAR, 7);
         dateStr = sdf.format(offsetCal.getTime());
         new AsyncTaskHandler().execute("get");
     }
 
+    /**
+     * Remove 7 days calendar and retrieve new data based on the adjusted calendar date
+     */
     public void removeWeekFromCurrentWeekOffset() {
         offsetCal.add(Calendar.DAY_OF_YEAR, -7);
         dateStr = sdf.format(offsetCal.getTime());
         new AsyncTaskHandler().execute("get");
     }
 
+    /**
+     * Return current list of appointments
+     * @return
+     */
     public ArrayList<Appointment> getAppointments() {
         return apps;
     }
 
+    /**
+     * Insert one or more Appointments to database as an AsyncTask
+     *
+     * @param app One or more Appointments provided
+     */
     public void insertNewData(Appointment... app) {
         currentAppointments = app;
         new AsyncTaskHandler().execute("insert", "get");
     }
 
+    /**
+     * Update existing Appointment at position with given Appointment
+     * @param position Integer value to indicate position inside collection
+     * @param app New Appointment to replace old data
+     */
     public void updateExistingData(int position, Appointment... app) {
         apps.set(position, app[0]);
         order(apps);
@@ -68,6 +98,11 @@ public class AppointmentHandler {
         new AsyncTaskHandler().execute("update");
     }
 
+    /**
+     * Remove one or more Appointments as an AsyncTask
+     *
+     * @param app One or more Appointments to be removed
+     */
     public void removeData(Appointment... app) {
         apps.remove(app[0]);
         order(apps);
@@ -75,6 +110,13 @@ public class AppointmentHandler {
         new AsyncTaskHandler().execute("delete");
     }
 
+    /**
+     * Used for finding the position of the Appointment that fired an alarm and started activity
+     * from notification.
+     *
+     * @param creationTime "Unique id" used for creating Pending Intents (AlarmManager)
+     * @return Position of the Appointment inside collection
+     */
     public int findByAlarm(long creationTime) {
         for(int i = 0; i < apps.size(); i++) {
             if(apps.get(i).getAlarms().size() != 0) {
@@ -88,6 +130,10 @@ public class AppointmentHandler {
         return -1;
     }
 
+    /**
+     * Order appointments based on Date then Time inside collection
+     * @param appointments List of appointments to be ordered
+     */
     public void order(ArrayList<Appointment> appointments) {
         Collections.sort(appointments, (o1, o2) -> {
 
@@ -105,8 +151,13 @@ public class AppointmentHandler {
         });
     }
 
+    /**
+     * Inner class for handling dataflow using AsyncTasks.
+     *
+     * Depending on the action(s) the task broadcasts on completion and the receiving Activity
+     * adjusts the views according to what action was completed.
+     */
     private class AsyncTaskHandler extends AsyncTask<String, Integer, Integer> {
-
         @Override
         protected Integer doInBackground(String... actions) {
             int actionCode = 0;

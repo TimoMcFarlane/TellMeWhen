@@ -12,10 +12,20 @@ import java.util.ArrayList;
 
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
+/**
+ * Adapter used for displaying alarms inside DetailsFragment alarm recyclerview.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecyclerAdapter.ViewHolder>{
 
     public ArrayList<AppointmentAlarm> alarms;
 
+    /**
+     * Initialize ViewHolder views
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView card_date;
         public TextView card_time;
@@ -29,6 +39,12 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
         this.alarms = alarms;
     }
 
+    /**
+     * onCreateViewHolder inflate CardView and get ViewHolder
+     * @param parent default
+     * @param viewType default
+     * @return ViewHolder
+     */
     @NonNull
     @Override
     public DetailsRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,6 +55,11 @@ public class DetailsRecyclerAdapter extends RecyclerView.Adapter<DetailsRecycler
         return vh;
     }
 
+    /**
+     * Convert data to array and set view texts based on position
+     * @param holder ViewHolder
+     * @param position position of view inside collection
+     */
     @Override
     public void onBindViewHolder(@NonNull DetailsRecyclerAdapter.ViewHolder holder, int position) {
         if(position != RecyclerView.NO_POSITION) {

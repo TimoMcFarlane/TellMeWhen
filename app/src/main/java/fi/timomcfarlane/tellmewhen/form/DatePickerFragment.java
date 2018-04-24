@@ -11,13 +11,24 @@ import android.widget.DatePicker;
 
 import java.util.Calendar;
 
-
+/**
+ * Class used for creating a DatePicker -dialog as a fragment
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class DatePickerFragment extends AppCompatDialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
     private LocalBroadcastManager lBroadcast;
     private String key;
 
+    /**
+     * When creating the dialog set the current date as the starting point
+     * @param b default param
+     * @return Dialog object
+     */
     @Override
     public Dialog onCreateDialog(Bundle b) {
         lBroadcast = LocalBroadcastManager.getInstance(getContext());
@@ -28,6 +39,14 @@ public class DatePickerFragment extends AppCompatDialogFragment
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
+    /**
+     * When date is set, broadcast the data back to FormActivity
+     *
+     * @param datePicker DatePicker that set the time
+     * @param i Year that was set
+     * @param i1 Month that was set
+     * @param i2 Day that was set
+     */
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
         Intent broadcast = new Intent("form_activity");

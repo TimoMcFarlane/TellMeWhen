@@ -21,7 +21,13 @@ import java.util.ArrayList;
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
 import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.createVerbalDate;
-
+/**
+ * Class displays details of a specific appointment inside a Fragment.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class AppointmentDetailsFragment extends Fragment {
     private View view;
     private TextView title;
@@ -37,6 +43,14 @@ public class AppointmentDetailsFragment extends Fragment {
     private RecyclerView list;
     private DetailsRecyclerAdapter adapter;
 
+    /**
+     * onCreate application inits views and view clicklisteners.
+     * Fill views with provided appointment data.
+     * @param inflater default
+     * @param container default
+     * @param savedInstanceState default
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -52,6 +66,11 @@ public class AppointmentDetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * onViewCreated add recyclerlist and adapter to display appointment alarms in a list
+     * @param view default
+     * @param savedInstanceState default
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -65,6 +84,9 @@ public class AppointmentDetailsFragment extends Fragment {
         super.onResume();
     }
 
+    /**
+     * Add clicklisteners to views for closing, deleting and editing appointment
+     */
     public void initClickListeners() {
         close.setOnClickListener((View v) -> {
             ((ScheduleActivity)getActivity()).showListFragment();
@@ -80,6 +102,9 @@ public class AppointmentDetailsFragment extends Fragment {
         });
     }
 
+    /**
+     * Initialize layout views
+     */
     public void initViews() {
         title = (TextView) view.findViewById(R.id.details_title);
         date = (TextView) view.findViewById(R.id.details_date);
@@ -94,6 +119,10 @@ public class AppointmentDetailsFragment extends Fragment {
         list = (RecyclerView) view.findViewById(R.id.details_alarms);
     }
 
+    /**
+     * Set category image to display correct image and background depending on given param
+     * @param category Indicates what type of appointment
+     */
     public void initCategoryImage(String category) {
         switch(category) {
             case "work":

@@ -12,13 +12,26 @@ import android.view.ViewGroup;
 
 import fi.timomcfarlane.tellmewhen.data.AppointmentHandler;
 import fi.timomcfarlane.tellmewhen.utils.CustomCardClickListener;
-
+/**
+ * Class displays recyclerview list of appointments inside a fragment
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class AppointmentListFragment extends Fragment {
     private AppointmentHandler appHandler;
     private RecyclerView recycledList;
     private RecyclerAdapter adapter;
     private View view;
 
+    /**
+     * onCreateView boilerplate. Inflate fragment.
+     * @param inflater default
+     * @param container default
+     * @param savedInstanceState default
+     * @return
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -30,6 +43,12 @@ public class AppointmentListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * onViewCreated get instance of AppointmentHandler from ScheduleActivity and
+     * init recyclerview with retrieved data.
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

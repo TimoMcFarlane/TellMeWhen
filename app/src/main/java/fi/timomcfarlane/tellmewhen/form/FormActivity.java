@@ -35,7 +35,14 @@ import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static fi.timomcfarlane.tellmewhen.utils.DateManipulationUtils.formatWithSeparator;
-
+/**
+ * Activity class for displaying a Form to the user. Class is used for creating and editing
+ * appointments and on submit returning the new/edited values to the ScheduleActivity.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class FormActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private View root;
     private Spinner categorySpinner;
@@ -57,7 +64,12 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
     private AlarmListFragment alarmListFragment;
     private String pickerAction;
 
-
+    /**
+     * In onCreate the application initializes the fields and autofills the fields if the activity
+     * was started with an intent containing extra named "edit"
+     *
+     * @param savedInstanceState default param
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +91,9 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         setPickerAction("not_alarm");
     }
 
+    /**
+     * In onStart the application creates a fragment for displaying added alarms inside the form
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -89,6 +104,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
                 .commit();
     }
 
+    /**
+     * Autofill the form fields with given data that was passed inside the intent
+     * when intent was started with "edit" as an extra.
+     */
     public void autoFillFormFields() {
         submit.setText("Edit");
         title.setText(getIntent().getStringExtra("title"));
@@ -105,6 +124,9 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
                 ));
     }
 
+    /**
+     * Initialize form views.
+     */
     public void initFields() {
         c = Calendar.getInstance();
         title = (EditText) findViewById(R.id.form_title);
@@ -123,7 +145,13 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         submit = (Button) findViewById(R.id.submit_form);
     }
 
-
+    /**
+     * Attach a "listener" to keep track of opening and closing of the android system keyboard.
+     * Listener looks for layout changes and calculates if the change was over 200px,
+     * assuming its the keyboard that was opened.
+     * When keyboard is activated it hides certain elements to prevent overlapping of form
+     * views and keeping the user interface clean.
+     */
     public void attachGlobalFormListener() {
         root = findViewById(R.id.form_parent);
         root.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -157,12 +185,20 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         });
     }
 
+    /**
+     * Convert given DP values to pixels
+     * @param context used for getting DisplayMetrics
+     * @param valueInDp Dp value to be converted to pixels
+     * @return float representing pixels
+     */
     public float changeDpToPx(Context context, float valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
     }
 
-
+    /**
+     * Set placeholder text to date and time views from current date
+     */
     public void initDateTimePlaceholders() {
         String dateText = formatWithSeparator(new int[] {
                 c.get(Calendar.YEAR),
@@ -179,6 +215,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         time.setText(timeText);
     }
 
+    /**
+     * Display datepicker dialog fragment used for setting date
+     * @param v Used to check if setting appointment or alarm date
+     */
     public void showDatePickerDialog(View v) {
         if(v.getId() != R.id.form_date) {
             setPickerAction("alarm");
@@ -189,6 +229,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         dFragment.show(getSupportFragmentManager(), "datePicker");
     }
 
+    /**
+     * Display timepicker dialog fragment used for setting time
+     * @param v Used to check if setting appointment or alarm time
+     */
     public void showTimePickerDialog(View v) {
         if(v.getId() != R.id.form_time) {
             setPickerAction("alarm");
@@ -199,28 +243,48 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         tFragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    /**
+     * onResume register broadcast receiver
+     */
     @Override
     protected void onResume() {
         super.onResume();
         setupBroadcastReceiver();
     }
 
+    /**
+     * onPause unregister broadcast receiver
+     */
     @Override
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
         super.onPause();
     }
 
+    /**
+     * Spinner onItemSelected, category is set to the value of category spinner.
+     * @param adapterView Spinner that has options for category
+     * @param view default
+     * @param i position of element in spinner list
+     * @param l default
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         category = (String) adapterView.getItemAtPosition(i);
     }
 
+    /**
+     * Implementation forced by AdapterViewOnItemSelectedListener
+     * @param adapterView default param
+     */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
 
+    /**
+     * Register broadcast receiver for receiving data from Date/Timepicker dialogs.
+     */
     public void setupBroadcastReceiver() {
         bReceiver = new BroadcastReceiver() {
             @Override
@@ -257,12 +321,22 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
                 .registerReceiver(bReceiver, new IntentFilter("form_activity"));
     }
 
+    /**
+     * Create new alarm using Date/Timepicker dialogs
+     * @param v default param for onClick
+     */
     public void createNewAlarm(View v) {
         setPickerAction("alarm");
         showTimePickerDialog(v);
         showDatePickerDialog(v);
     }
 
+    /**
+     * Remove alarm from list of alarms at given position.
+     * Also check if editing existing appointment
+     * and remove any alarms from the android system AlarmManager
+     * @param position position of view to be removed
+     */
     public void removeAlarm(int position) {
         if(getIntent().hasExtra("edit")) {
             Intent intent = new Intent(getBaseContext(), AppointmentAlarmReceiver.class);
@@ -279,6 +353,10 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         alarmListFragment.getList().getAdapter().notifyDataSetChanged();
     }
 
+    /**
+     * Set activity result to canceled and finish
+     * @param v default onclick
+     */
     public void onFormCancel(View v) {
         Intent i = new Intent();
         i.putExtra("position", getIntent().getIntExtra("position", -1));
@@ -298,6 +376,12 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         return this.pickerAction;
     }
 
+    /**
+     * Add all data from form to Intent and set activity result to OK.
+     * Activate all added alarms using activateAlarm()
+     * Finish activity.
+     * @param v default onclick
+     */
     public void onFormSubmit(View v) {
         Intent result = new Intent();
         result.putExtra("title", title.getText().toString());
@@ -313,6 +397,9 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         finish();
     }
 
+    /**
+     * Add all alarms that were created to android AlarmManager
+     */
     public void activateAlarms() {
         if(this.alarms.size() > 0) {
             AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -339,6 +426,13 @@ public class FormActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Format a String date to Date object that can be passed to calendar.
+     * @param date String representation of wanted date
+     * @param time String representation of wanted time
+     * @return Calendar object with time set to the passed arguments
+     * @throws ParseException
+     */
     public Calendar createDateTimeFromString(String date, String time) throws ParseException {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());

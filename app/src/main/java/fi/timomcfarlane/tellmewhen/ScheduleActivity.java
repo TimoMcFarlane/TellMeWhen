@@ -29,18 +29,48 @@ import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 import fi.timomcfarlane.tellmewhen.form.FormActivity;
 
-
+/**
+ * ScheduleActivity is the main activity of this application.
+ * This activity displays the main view to the user using a recyclerview
+ * for displaying scheduled appointments
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class ScheduleActivity extends AppCompatActivity {
+    /**
+     * ADD_NEW_APPOINTMENT used as a code to indicate action for startActivityForResult
+     */
     private final static int ADD_NEW_APPOINTMENT = 10;
+    /**
+     * EDIT_EXISTING_APPOINTMENT used as a code to indicate action for startActivityForResult
+     */
     private final static int EDIT_EXISTING_APPOINTMENT = 12;
-    private Animation fadeIn;
-    private Animation fadeOut;
+    /**
+     * editCanceled used as a flag for checking if edit in ActivityForm was cancelled
+     */
     private boolean editCanceled;
+    /**
+     * addCanceled used as a flag for checking if add in ActivityForm was cancelled
+     */
     private boolean addCanceled;
+    /**
+     * initFromNotification used as a flag for checking if activity was started from notification
+     */
     private boolean initFromNotification;
     private int editPosition;
+    /**
+     * Local broadcastreceiver used for receiving broadcasts inside application
+     */
     private BroadcastReceiver bReceiver;
+    /**
+     * Fragment for displaying recycler view list of appointments
+     */
     private AppointmentListFragment listFragment;
+    /**
+     * Fragment for displaying details of one appointment
+     */
     private AppointmentDetailsFragment details;
     private RelativeLayout banner;
     private TextView bannerMonth;
@@ -49,6 +79,13 @@ public class ScheduleActivity extends AppCompatActivity {
     private AppointmentHandler appHandler;
     private RecyclerView recycledList;
 
+
+    /**
+     * In onCreate of this activity the application initializes the main view
+     * and instantiates an AppointmentHandler to get data for all the necessary view components.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,10 +95,17 @@ public class ScheduleActivity extends AppCompatActivity {
         initAppointmentHandler();
     }
 
+    /**
+     * Get an instance of the AppointmentHandler class.
+     */
     public void initAppointmentHandler() {
         appHandler = new AppointmentHandler(this);
     }
 
+    /**
+     * In onStart of this activity the necessary fragments are instantiated
+     * and the listFragment is called to be displayed.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -70,6 +114,13 @@ public class ScheduleActivity extends AppCompatActivity {
         showListFragment();
     }
 
+    /**
+     * In onResume of this activity the recyclerview list is retrieved
+     * and a broadcastreceiver is setup to listen for incoming broadcasts
+     * from within the application.
+     *
+     * There is also a check for if the software was opened from a notification using an intent.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -83,6 +134,12 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * In onPostResume of this activity the application checks if an operation was cancelled
+     * or if the application was initially started from a notification.
+     *
+     * Depending on what state the application was in, show the correct fragment.
+     */
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -100,12 +157,19 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * In onPause of this activity, unregister broadcast receiver.
+     */
     @Override
     protected void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(bReceiver);
         super.onPause();
     }
 
+    /**
+     * In initBanner the application initializes necessary views for the banner portion
+     * of the main view.
+     */
     public void initBanner() {
         banner = (RelativeLayout) findViewById(R.id.banner);
         bannerMonth = (TextView) findViewById(R.id.banner_month);
@@ -113,6 +177,10 @@ public class ScheduleActivity extends AppCompatActivity {
         setBanner();
     }
 
+    /**
+     * In setBanner the application sets the main view banner texts and image.
+     * Images are set based on the 4 seasons (winter, spring, summer, autumn).
+     */
     public void setBanner() {
         bannerWeek.setText("WEEK " + calendarNow.get(Calendar.WEEK_OF_YEAR));
         bannerMonth.setText(calendarNow.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.ENGLISH));
@@ -127,17 +195,38 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * In addNewAppointment activity starts FormActivity for a result.
+     * On success the form returns necessary data to build a new appointment.
+     * addCanceled is used for flagging onPostResume method conditionals
+     *
+     * @param v Necessary View parameter for view onClick
+     */
     public void addNewAppointment(View v) {
         addCanceled = false;
         Intent i = new Intent(this, FormActivity.class);
         startActivityForResult(i, ADD_NEW_APPOINTMENT);
     }
 
+    /**
+     * In deleteAppointment activity requests AppointmentHandler to remove one Appointment
+     * at the given position.
+     * After delete display listFragment in view.
+     *
+     * @param position Integer value used for removing data at arraylist index
+     */
     public void deleteAppointment(int position) {
         appHandler.removeData(appHandler.getAppointments().remove(position));
         showListFragment();
     }
 
+    /**
+     * In editAppointment create a bundle from the data inside the current Appointment
+     * and send it to the FormActivity for autofilling.
+     *
+     * @param position Integer value used for getting data at arraylist index
+     */
     public void editAppointmentAtPosition(int position) {
         editPosition = position;
         editCanceled = false;
@@ -149,6 +238,13 @@ public class ScheduleActivity extends AppCompatActivity {
         startActivityForResult(i, EDIT_EXISTING_APPOINTMENT);
     }
 
+    /**
+     * In changeWeek application adds or removes one week from the current calendar time value
+     * and requests new data from AppointmentHandler based on what week it is.
+     * Update banner according to new week data.
+     *
+     * @param v Necessary parameter for view onClick used to distinguish which arrow was triggered.
+     */
     public void changeWeek(View v) {
         if(v.getId() == R.id.left_arrow) {
             calendarNow.add(Calendar.DAY_OF_YEAR, -7);
@@ -161,6 +257,14 @@ public class ScheduleActivity extends AppCompatActivity {
         setBanner();
     }
 
+    /**
+     * In onActivityResult of this activity the application creates or edits appointments
+     * depending on the users actions.
+     *
+     * @param requestCode Integer used to distinguish what action was used in startActivityForResult
+     * @param resultCode Integer used to check if action was successful in startActivityForResult
+     * @param data Intent passed from Activity that was started using startActivityForResult
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ADD_NEW_APPOINTMENT) {
@@ -198,6 +302,9 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Display listFragment that has a recycler view populated with list items.
+     */
     public void showListFragment() {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -205,6 +312,11 @@ public class ScheduleActivity extends AppCompatActivity {
                 .commit();
     }
 
+    /**
+     * View details of one recycler view list item at the given position inside a separate fragment.
+     *
+     * @param position Integer value used to distinguish which appointment was tapped.
+     */
     public void viewDetailsFragment(int position) {
         Log.d("MSG", "Position value: " + position);
         if(position != -1) {
@@ -216,6 +328,12 @@ public class ScheduleActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * In createBundleFromAppointment the application creates a Bundle object based on data provided
+     * by the appointment at given position.
+     * @param position Integer value used in getting the correct appointment
+     * @return Bundle object containing necessary data extras
+     */
     public Bundle createBundleFromAppointment(int position) {
         Appointment clickedApp = appHandler.getAppointments().get(position);
         Bundle payload = new Bundle();
@@ -230,6 +348,11 @@ public class ScheduleActivity extends AppCompatActivity {
         return payload;
     }
 
+    /**
+     * Register local broadcast receiver to receive broadcasts from within the application.
+     * Depending on the broadcasted "action code" the application will run necessary methods
+     * to update views.
+     */
     public void setupBroadcastReceiver() {
         bReceiver = new BroadcastReceiver() {
             @Override
@@ -258,6 +381,10 @@ public class ScheduleActivity extends AppCompatActivity {
                 .registerReceiver(bReceiver, new IntentFilter("appointment_handler"));
     }
 
+    /**
+     * In activateImmersiveUI the application hides the system status bar and default device
+     * navigation. By swiping close to the top or bottom of the screen you can show the UI again.
+     */
     public void activateImmersiveUI() {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -267,6 +394,12 @@ public class ScheduleActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
     }
 
+    /**
+     * In getAppHandler the applications retrieves this activitys current instance of
+     * AppointmentHandler
+     *
+     * @return AppointmentHandler object
+     */
     public AppointmentHandler getAppHandler() {
         return this.appHandler;
     }

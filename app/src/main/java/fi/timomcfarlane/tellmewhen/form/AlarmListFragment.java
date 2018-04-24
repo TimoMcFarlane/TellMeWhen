@@ -12,8 +12,13 @@ import android.view.ViewGroup;
 
 import fi.timomcfarlane.tellmewhen.R;
 
-
-
+/**
+ * Class represents a Fragment for displaying a list of Alarms inside FormActivity
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class AlarmListFragment extends Fragment {
     private RecyclerView recycledList;
     private AlarmRecyclerAdapter adapter;
@@ -27,6 +32,11 @@ public class AlarmListFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Inside onViewCreated recycler view is setup and listitem onClick is added
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

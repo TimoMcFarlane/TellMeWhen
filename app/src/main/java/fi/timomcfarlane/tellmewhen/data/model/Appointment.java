@@ -8,7 +8,14 @@ import android.arch.persistence.room.TypeConverters;
 import java.util.ArrayList;
 
 import fi.timomcfarlane.tellmewhen.data.DataTypeConverter;
-
+/**
+ * Class is used as a data model for a single Appointment and
+ * is annotated as an Entity for persisting inside Room persistence library.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 @Entity(tableName = "appointment")
 public class Appointment {
     @PrimaryKey(autoGenerate = true)

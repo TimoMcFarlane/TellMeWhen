@@ -21,9 +21,25 @@ import fi.timomcfarlane.tellmewhen.data.model.Appointment;
 import fi.timomcfarlane.tellmewhen.data.model.AppointmentAlarm;
 
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
-
+/**
+ * Class used for receving on boot completed broadcasts.
+ *
+ * AlarmManager doesn't save alarms, this receiver schedules all necessary alarms from today
+ * onwards into the system by querying the database and creating alarms according to retrieved
+ * appointments.
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class BootAlarmReceiver extends BroadcastReceiver {
 
+    /**
+     * onReceive acquire a wakelock from android system and in a separate thread add alarms to
+     * system based on alarms found from the database.
+     * @param context
+     * @param intent
+     */
     @Override
     public void onReceive(Context context, Intent intent) {
         PowerManager pm =
@@ -34,6 +50,7 @@ public class BootAlarmReceiver extends BroadcastReceiver {
         //Acquire wakelock to ensure all tasks are finished
         wl.acquire();
 
+        //Setup database
         AppDatabase db = Room.databaseBuilder(
                 context,
                 AppDatabase.class,
@@ -42,11 +59,11 @@ public class BootAlarmReceiver extends BroadcastReceiver {
 
         ArrayList<Appointment> apps = new ArrayList<>();
 
-        Log.d("MOIST", "INSIDE POST EXECUTE");
-
         Thread t = new Thread(() -> {
+            // Retrieve data from database
             apps.addAll(db.appointmentDao().getAllFutureAppointments());
 
+            // For each appointment check for alarms and create alarm for each that was found
             for(Appointment a : apps) {
                 if(a.getAlarms().size() > 0) {
                     Log.d("MOIST", "SIZE:" + a.getAlarms().size());
@@ -77,6 +94,14 @@ public class BootAlarmReceiver extends BroadcastReceiver {
         });
         t.start();
     }
+
+    /**
+     * Convert given string date and time to a single date object that is passed to calendar
+     * @param date String representation of desired date
+     * @param time String representation of desired time
+     * @return Calendar object with given date
+     * @throws ParseException
+     */
     public Calendar createDateTimeFromString(String date, String time) throws ParseException {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());

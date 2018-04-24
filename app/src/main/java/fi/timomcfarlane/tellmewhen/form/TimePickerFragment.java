@@ -11,12 +11,23 @@ import android.util.Log;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
-
+/**
+ * Class used for creating a TimePicker -dialog as a fragment
+ *
+ * @author  Timo McFarlane
+ * @version 1.0
+ * @since   2014-04-24
+ */
 public class TimePickerFragment extends AppCompatDialogFragment
         implements TimePickerDialog.OnTimeSetListener {
 
     private LocalBroadcastManager lBroadcast;
 
+    /**
+     * When creating dialog set the default time equal to the current time
+     * @param b default param
+     * @return Return Dialog object
+     */
     @Override
     public Dialog onCreateDialog(Bundle b) {
         lBroadcast = LocalBroadcastManager.getInstance(getContext());
@@ -32,6 +43,12 @@ public class TimePickerFragment extends AppCompatDialogFragment
                 DateFormat.is24HourFormat(getActivity()));
     }
 
+    /**
+     * When the time is set broadcast the data back to FormActivity
+     * @param timePicker TimePicker that set the time
+     * @param i Hours that were set
+     * @param i1 Minutes that were set
+     */
     @Override
     public void onTimeSet(TimePicker timePicker, int i, int i1) {
         Intent broadcast = new Intent("form_activity");
